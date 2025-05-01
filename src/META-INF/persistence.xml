@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence           http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+  <persistence-unit name="EstarBienPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>modelo.Inventario</class>
+    <class>modelo.Usuario</class>
+    <class>modelo.Pago</class>
+    <class>modelo.Paciente</class>
+    <class>modelo.SeguimientoPacientes</class>
+    <class>modelo.ReporteTratamientos</class>
+    <class>modelo.ReporteCitas</class>
+    <class>modelo.ConsultaDiagnostico</class>
+    <class>modelo.RecetaMedicamento</class>
+    <class>modelo.Tratamiento</class>
+    <class>modelo.Medico</class>
+    <class>modelo.HorarioMedico</class>
+    <class>modelo.Medicamento</class>
+    <class>modelo.InventarioBajo</class>
+    <class>modelo.Consulta</class>
+    <class>modelo.Factura</class>
+    <class>modelo.CitaMedica</class>
+    <class>modelo.RecetaMedica</class>
+    <class>modelo.ExpedienteMedico</class>
+    <class>modelo.Notificacion</class>
+    <class>modelo.Administrador</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/estar_bien_db"/>
+      <property name="javax.persistence.jdbc.user" value="postgres"/>
+      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+      <property name="javax.persistence.jdbc.password" value="admin"/>
+    </properties>
+  </persistence-unit>
+</persistence>
