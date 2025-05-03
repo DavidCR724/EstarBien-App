@@ -10,6 +10,7 @@ import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -59,6 +60,8 @@ public class SeguimientoPacientes implements Serializable {
     private BigDecimal peso;
     @Column(name = "estatura")
     private BigDecimal estatura;
+    @Id
+    private Long id;
 
     public SeguimientoPacientes() {
     }
@@ -141,6 +144,14 @@ public class SeguimientoPacientes implements Serializable {
 
     public void setEstatura(BigDecimal estatura) {
         this.estatura = estatura;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
     
 }

@@ -3,6 +3,11 @@
 <Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="title" type="java.lang.String" value="Estar Bien"/>
+    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+      <Color blue="ff" green="ff" red="ff" type="rgb"/>
+    </Property>
+    <Property name="extendedState" type="int" value="6"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
@@ -24,33 +29,66 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="panelMenu" max="32767" attributes="0"/>
-          <Component id="panelContenedor" min="-2" pref="1035" max="-2" attributes="0"/>
+          <Component id="panelContenedor" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <Component id="panelMenu" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-              <Component id="panelContenedor" min="-2" pref="477" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="panelContenedor" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
     <Container class="javax.swing.JPanel" name="panelMenu">
+      <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="ff" green="ff" red="ff" type="rgb"/>
+        </Property>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+            <EtchetBorder/>
+          </Border>
+        </Property>
+      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="botonInicio" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="botonCitas" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="botonPacientes" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="botonCitas" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+                  <Component id="botonConfiguracion" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="botonExpediente" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="botonFacturas" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="botonInventario" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="botonMedicamentos" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="botonMedicos" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="botonNotificaciones" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="botonPagos" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="botonRecetas" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="botonTratamientos" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="botonUsuarios" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="264" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -62,6 +100,17 @@
                       <Component id="botonInicio" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="botonPacientes" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="botonCitas" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="botonConfiguracion" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="botonExpediente" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="botonFacturas" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="botonInventario" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="botonMedicamentos" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="botonMedicos" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="botonNotificaciones" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="botonPagos" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="botonRecetas" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="botonTratamientos" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="botonUsuarios" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="25" max="32767" attributes="0"/>
               </Group>
@@ -71,7 +120,13 @@
       <SubComponents>
         <Component class="javax.swing.JButton" name="botonInicio">
           <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Inicio"/>
+            <Property name="borderPainted" type="boolean" value="false"/>
+            <Property name="contentAreaFilled" type="boolean" value="false"/>
+            <Property name="focusPainted" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonInicioActionPerformed"/>
@@ -79,7 +134,13 @@
         </Component>
         <Component class="javax.swing.JButton" name="botonPacientes">
           <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Pacientes"/>
+            <Property name="borderPainted" type="boolean" value="false"/>
+            <Property name="contentAreaFilled" type="boolean" value="false"/>
+            <Property name="focusPainted" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonPacientesActionPerformed"/>
@@ -87,17 +148,160 @@
         </Component>
         <Component class="javax.swing.JButton" name="botonCitas">
           <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Citas"/>
+            <Property name="borderPainted" type="boolean" value="false"/>
+            <Property name="contentAreaFilled" type="boolean" value="false"/>
+            <Property name="focusPainted" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonCitasActionPerformed"/>
           </Events>
         </Component>
+        <Component class="javax.swing.JButton" name="botonConfiguracion">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Configuraci&#xf3;n"/>
+            <Property name="borderPainted" type="boolean" value="false"/>
+            <Property name="contentAreaFilled" type="boolean" value="false"/>
+            <Property name="focusPainted" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonConfiguracionActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="botonExpediente">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Expediente"/>
+            <Property name="borderPainted" type="boolean" value="false"/>
+            <Property name="contentAreaFilled" type="boolean" value="false"/>
+            <Property name="focusPainted" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonExpedienteActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="botonFacturas">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Facturas"/>
+            <Property name="borderPainted" type="boolean" value="false"/>
+            <Property name="contentAreaFilled" type="boolean" value="false"/>
+            <Property name="focusPainted" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonFacturasActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="botonInventario">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Inventario"/>
+            <Property name="borderPainted" type="boolean" value="false"/>
+            <Property name="contentAreaFilled" type="boolean" value="false"/>
+            <Property name="focusPainted" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonInventarioActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="botonMedicamentos">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Medicamentos"/>
+            <Property name="borderPainted" type="boolean" value="false"/>
+            <Property name="contentAreaFilled" type="boolean" value="false"/>
+            <Property name="focusPainted" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonMedicamentosActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="botonMedicos">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Medicos"/>
+            <Property name="borderPainted" type="boolean" value="false"/>
+            <Property name="contentAreaFilled" type="boolean" value="false"/>
+            <Property name="focusPainted" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonMedicosActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="botonNotificaciones">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Notificaciones"/>
+            <Property name="borderPainted" type="boolean" value="false"/>
+            <Property name="contentAreaFilled" type="boolean" value="false"/>
+            <Property name="focusPainted" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonNotificacionesActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="botonPagos">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Pagos"/>
+            <Property name="borderPainted" type="boolean" value="false"/>
+            <Property name="contentAreaFilled" type="boolean" value="false"/>
+            <Property name="focusPainted" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonPagosActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="botonRecetas">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Recetas"/>
+            <Property name="borderPainted" type="boolean" value="false"/>
+            <Property name="contentAreaFilled" type="boolean" value="false"/>
+            <Property name="focusPainted" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonRecetasActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="botonTratamientos">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Tratamientos"/>
+            <Property name="borderPainted" type="boolean" value="false"/>
+            <Property name="contentAreaFilled" type="boolean" value="false"/>
+            <Property name="focusPainted" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonTratamientosActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="botonUsuarios">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Usuarios"/>
+            <Property name="borderPainted" type="boolean" value="false"/>
+            <Property name="contentAreaFilled" type="boolean" value="false"/>
+            <Property name="focusPainted" type="boolean" value="false"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botonUsuariosActionPerformed"/>
+          </Events>
+        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="panelContenedor">
+      <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="ff" green="cc" red="cc" type="rgb"/>
+        </Property>
+      </Properties>
 
-      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignCardLayout"/>
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <EmptySpace min="0" pref="1541" max="32767" attributes="0"/>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <EmptySpace min="0" pref="457" max="32767" attributes="0"/>
+          </Group>
+        </DimensionLayout>
+      </Layout>
     </Container>
   </SubComponents>
 </Form>
