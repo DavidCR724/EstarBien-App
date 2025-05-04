@@ -29,7 +29,9 @@ public class PanelPacientes extends javax.swing.JPanel {
 
         jLabel1 = new javax.swing.JLabel();
 
-        jLabel1.setText("Panel pacientees JAJAJAJAJAJ");
+        setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel1.setText("Panel pacientees ");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -38,7 +40,7 @@ public class PanelPacientes extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(144, 144, 144)
                 .addComponent(jLabel1)
-                .addContainerGap(101, Short.MAX_VALUE))
+                .addContainerGap(165, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

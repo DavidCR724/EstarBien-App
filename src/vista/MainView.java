@@ -20,6 +20,7 @@ public class MainView extends javax.swing.JFrame {
     public MainView() {
         initComponents();
         panelContenedor.setLayout(new CardLayout());
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
 
     }
 
@@ -34,28 +35,167 @@ public class MainView extends javax.swing.JFrame {
         botonInicio = new javax.swing.JButton();
         botonPacientes = new javax.swing.JButton();
         botonCitas = new javax.swing.JButton();
+        botonConfiguracion = new javax.swing.JButton();
+        botonExpediente = new javax.swing.JButton();
+        botonFacturas = new javax.swing.JButton();
+        botonInventario = new javax.swing.JButton();
+        botonMedicamentos = new javax.swing.JButton();
+        botonMedicos = new javax.swing.JButton();
+        botonNotificaciones = new javax.swing.JButton();
+        botonPagos = new javax.swing.JButton();
+        botonRecetas = new javax.swing.JButton();
+        botonTratamientos = new javax.swing.JButton();
+        botonUsuarios = new javax.swing.JButton();
         panelContenedor = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Estar Bien");
+        setBackground(new java.awt.Color(255, 255, 255));
+        setExtendedState(6);
 
+        panelMenu.setBackground(new java.awt.Color(255, 255, 255));
+        panelMenu.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        botonInicio.setBackground(new java.awt.Color(255, 255, 255));
         botonInicio.setText("Inicio");
+        botonInicio.setBorderPainted(false);
+        botonInicio.setContentAreaFilled(false);
+        botonInicio.setFocusPainted(false);
         botonInicio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonInicioActionPerformed(evt);
             }
         });
 
+        botonPacientes.setBackground(new java.awt.Color(255, 255, 255));
         botonPacientes.setText("Pacientes");
+        botonPacientes.setBorderPainted(false);
+        botonPacientes.setContentAreaFilled(false);
+        botonPacientes.setFocusPainted(false);
         botonPacientes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonPacientesActionPerformed(evt);
             }
         });
 
+        botonCitas.setBackground(new java.awt.Color(255, 255, 255));
         botonCitas.setText("Citas");
+        botonCitas.setBorderPainted(false);
+        botonCitas.setContentAreaFilled(false);
+        botonCitas.setFocusPainted(false);
         botonCitas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonCitasActionPerformed(evt);
+            }
+        });
+
+        botonConfiguracion.setText("Configuración");
+        botonConfiguracion.setBorderPainted(false);
+        botonConfiguracion.setContentAreaFilled(false);
+        botonConfiguracion.setFocusPainted(false);
+        botonConfiguracion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonConfiguracionActionPerformed(evt);
+            }
+        });
+
+        botonExpediente.setText("Expediente");
+        botonExpediente.setBorderPainted(false);
+        botonExpediente.setContentAreaFilled(false);
+        botonExpediente.setFocusPainted(false);
+        botonExpediente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonExpedienteActionPerformed(evt);
+            }
+        });
+
+        botonFacturas.setText("Facturas");
+        botonFacturas.setBorderPainted(false);
+        botonFacturas.setContentAreaFilled(false);
+        botonFacturas.setFocusPainted(false);
+        botonFacturas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonFacturasActionPerformed(evt);
+            }
+        });
+
+        botonInventario.setText("Inventario");
+        botonInventario.setBorderPainted(false);
+        botonInventario.setContentAreaFilled(false);
+        botonInventario.setFocusPainted(false);
+        botonInventario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonInventarioActionPerformed(evt);
+            }
+        });
+
+        botonMedicamentos.setText("Medicamentos");
+        botonMedicamentos.setBorderPainted(false);
+        botonMedicamentos.setContentAreaFilled(false);
+        botonMedicamentos.setFocusPainted(false);
+        botonMedicamentos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonMedicamentosActionPerformed(evt);
+            }
+        });
+
+        botonMedicos.setText("Medicos");
+        botonMedicos.setBorderPainted(false);
+        botonMedicos.setContentAreaFilled(false);
+        botonMedicos.setFocusPainted(false);
+        botonMedicos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonMedicosActionPerformed(evt);
+            }
+        });
+
+        botonNotificaciones.setText("Notificaciones");
+        botonNotificaciones.setBorderPainted(false);
+        botonNotificaciones.setContentAreaFilled(false);
+        botonNotificaciones.setFocusPainted(false);
+        botonNotificaciones.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonNotificacionesActionPerformed(evt);
+            }
+        });
+
+        botonPagos.setText("Pagos");
+        botonPagos.setBorderPainted(false);
+        botonPagos.setContentAreaFilled(false);
+        botonPagos.setFocusPainted(false);
+        botonPagos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonPagosActionPerformed(evt);
+            }
+        });
+
+        botonRecetas.setText("Recetas");
+        botonRecetas.setBorderPainted(false);
+        botonRecetas.setContentAreaFilled(false);
+        botonRecetas.setFocusPainted(false);
+        botonRecetas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonRecetasActionPerformed(evt);
+            }
+        });
+
+        botonTratamientos.setText("Tratamientos");
+        botonTratamientos.setBorderPainted(false);
+        botonTratamientos.setContentAreaFilled(false);
+        botonTratamientos.setFocusPainted(false);
+        botonTratamientos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonTratamientosActionPerformed(evt);
+            }
+        });
+
+        botonUsuarios.setText("Usuarios");
+        botonUsuarios.setBorderPainted(false);
+        botonUsuarios.setContentAreaFilled(false);
+        botonUsuarios.setFocusPainted(false);
+        botonUsuarios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonUsuariosActionPerformed(evt);
             }
         });
 
@@ -64,13 +204,35 @@ public class MainView extends javax.swing.JFrame {
         panelMenuLayout.setHorizontalGroup(
             panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMenuLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(botonInicio)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botonCitas)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(botonPacientes)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(botonCitas)
-                .addGap(31, 31, 31))
+                .addComponent(botonConfiguracion)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botonExpediente)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botonFacturas)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botonInventario)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botonMedicamentos)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botonMedicos)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botonNotificaciones)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botonPagos)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botonRecetas)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botonTratamientos)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botonUsuarios)
+                .addContainerGap(264, Short.MAX_VALUE))
         );
         panelMenuLayout.setVerticalGroup(
             panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -79,25 +241,48 @@ public class MainView extends javax.swing.JFrame {
                 .addGroup(panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(botonInicio)
                     .addComponent(botonPacientes)
-                    .addComponent(botonCitas))
+                    .addComponent(botonCitas)
+                    .addComponent(botonConfiguracion)
+                    .addComponent(botonExpediente)
+                    .addComponent(botonFacturas)
+                    .addComponent(botonInventario)
+                    .addComponent(botonMedicamentos)
+                    .addComponent(botonMedicos)
+                    .addComponent(botonNotificaciones)
+                    .addComponent(botonPagos)
+                    .addComponent(botonRecetas)
+                    .addComponent(botonTratamientos)
+                    .addComponent(botonUsuarios))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
-        panelContenedor.setLayout(new java.awt.CardLayout());
+        panelContenedor.setBackground(new java.awt.Color(204, 204, 255));
+
+        javax.swing.GroupLayout panelContenedorLayout = new javax.swing.GroupLayout(panelContenedor);
+        panelContenedor.setLayout(panelContenedorLayout);
+        panelContenedorLayout.setHorizontalGroup(
+            panelContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1541, Short.MAX_VALUE)
+        );
+        panelContenedorLayout.setVerticalGroup(
+            panelContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 457, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(panelMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panelContenedor, javax.swing.GroupLayout.PREFERRED_SIZE, 1035, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(panelContenedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(panelMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0)
-                .addComponent(panelContenedor, javax.swing.GroupLayout.PREFERRED_SIZE, 477, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelContenedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -114,6 +299,50 @@ public class MainView extends javax.swing.JFrame {
     private void botonCitasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCitasActionPerformed
         mostrarPanel("Citas", new PanelCitas());
     }//GEN-LAST:event_botonCitasActionPerformed
+
+    private void botonExpedienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonExpedienteActionPerformed
+        mostrarPanel("Expediente", new PanelExpedientes());
+    }//GEN-LAST:event_botonExpedienteActionPerformed
+
+    private void botonConfiguracionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonConfiguracionActionPerformed
+        mostrarPanel("Configuracion", new PanelConfiguracion());
+    }//GEN-LAST:event_botonConfiguracionActionPerformed
+
+    private void botonFacturasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonFacturasActionPerformed
+        mostrarPanel("Facturas", new PanelFacturas());
+    }//GEN-LAST:event_botonFacturasActionPerformed
+
+    private void botonInventarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonInventarioActionPerformed
+        mostrarPanel("Inventario", new PanelInventario());
+    }//GEN-LAST:event_botonInventarioActionPerformed
+
+    private void botonMedicamentosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMedicamentosActionPerformed
+        mostrarPanel("Medicamentos", new PanelMedicamentos());
+    }//GEN-LAST:event_botonMedicamentosActionPerformed
+
+    private void botonMedicosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonMedicosActionPerformed
+        mostrarPanel("Medicos", new PanelMedicos());
+    }//GEN-LAST:event_botonMedicosActionPerformed
+
+    private void botonNotificacionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonNotificacionesActionPerformed
+        mostrarPanel("Notificaciones", new PanelNotificaciones());
+    }//GEN-LAST:event_botonNotificacionesActionPerformed
+
+    private void botonPagosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonPagosActionPerformed
+        mostrarPanel("Pagos", new PanelPagos());
+    }//GEN-LAST:event_botonPagosActionPerformed
+
+    private void botonRecetasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRecetasActionPerformed
+        mostrarPanel("Recetas", new PanelReceta());
+    }//GEN-LAST:event_botonRecetasActionPerformed
+
+    private void botonTratamientosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonTratamientosActionPerformed
+        mostrarPanel("Tratamientos", new PanelTratamientos());
+    }//GEN-LAST:event_botonTratamientosActionPerformed
+
+    private void botonUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonUsuariosActionPerformed
+        mostrarPanel("Usuarios", new PanelUsuarios());
+    }//GEN-LAST:event_botonUsuariosActionPerformed
 
     public void mostrarPanel(String nombrePanel, JPanel panel) {
         if (panelContenedor.getComponentCount() > 0) {
@@ -168,12 +397,23 @@ public class MainView extends javax.swing.JFrame {
             }
         });
     }
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonCitas;
+    private javax.swing.JButton botonConfiguracion;
+    private javax.swing.JButton botonExpediente;
+    private javax.swing.JButton botonFacturas;
     private javax.swing.JButton botonInicio;
+    private javax.swing.JButton botonInventario;
+    private javax.swing.JButton botonMedicamentos;
+    private javax.swing.JButton botonMedicos;
+    private javax.swing.JButton botonNotificaciones;
     private javax.swing.JButton botonPacientes;
+    private javax.swing.JButton botonPagos;
+    private javax.swing.JButton botonRecetas;
+    private javax.swing.JButton botonTratamientos;
+    private javax.swing.JButton botonUsuarios;
     private javax.swing.JPanel panelContenedor;
     private javax.swing.JPanel panelMenu;
     // End of variables declaration//GEN-END:variables
