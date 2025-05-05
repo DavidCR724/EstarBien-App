@@ -11,21 +11,55 @@ import java.util.Date;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import modelo.Administrador;
 import modelo.Usuario;
+import vista.PanelUsuarios;
 
 /**
  *
  * @author carlo
  */
 public class FormAdministrador extends javax.swing.JPanel {
+
     private EntityManagerFactory emf;
+    private PanelUsuarios panelPadre;
+
     /**
      * Creates new form formAdministrador
      */
-    public FormAdministrador() {
+    public FormAdministrador(PanelUsuarios panelPadre) {
         initComponents();
         emf = Persistence.createEntityManagerFactory("EstarBienPU");
+        this.panelPadre = panelPadre;
+        idEliminarAdministrador.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                cargarSiEsNecesario();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                cargarSiEsNecesario();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                cargarSiEsNecesario();
+            }
+
+            private void cargarSiEsNecesario() {
+                if (editarBox.isSelected() && !idEliminarAdministrador.getText().isEmpty()) {
+                    try {
+                        int id = Integer.parseInt(idEliminarAdministrador.getText());
+                        cargarDatosAdministrador(id);
+                    } catch (NumberFormatException ex) {
+                        // No hacer nada si no es un número válido
+                    }
+                }
+            }
+        });
     }
     // En FormAdministrador.java
 
@@ -36,12 +70,21 @@ public class FormAdministrador extends javax.swing.JPanel {
             usuario.setNombreUsuario(nombreUsuario.getText());
             usuario.setContrasena(new String(contrasenaUsuario.getPassword()));
             usuario.setRol("administrador");
+            usuario.setFechaRegistro(new Date());
+            usuario.setActivo(true);
             // Crear administrador
             Administrador admin = new Administrador();
             admin.setNombre(nombreAdmin.getText());
-            admin.setCorreo(correoAdmin.getText());
+            if (validarCorreo(correoAdmin.getText())) {
+                admin.setCorreo(correoAdmin.getText());
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al añadir administrador correo invalido ",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
             admin.setTelefono(telefonoAdministrador.getText());
             admin.setIdUsuario(usuario);
+            admin.setCreatedAt(new Date());
+            
 
             // Persistir
             UsuarioJpaController usuarioController = new UsuarioJpaController(emf);
@@ -51,6 +94,9 @@ public class FormAdministrador extends javax.swing.JPanel {
 
             JOptionPane.showMessageDialog(this, "Administrador registrado exitosamente!");
             limpiarCampos();
+            if (panelPadre != null) {
+                panelPadre.notificarCambioUsuario();
+            }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error al registrar administrador: " + ex.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
@@ -59,6 +105,14 @@ public class FormAdministrador extends javax.swing.JPanel {
 
     public void editarAdministrador(int idUsuario) {
         try {
+            // Validar campos obligatorios
+            if (nombreUsuario.getText().isEmpty() || contrasenaUsuario.getPassword().length == 0
+                    || nombreAdmin.getText().isEmpty() || correoAdmin.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Complete todos los campos obligatorios",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             UsuarioJpaController usuarioController = new UsuarioJpaController(emf);
             AdministradorJpaController adminController = new AdministradorJpaController(emf);
 
@@ -70,7 +124,13 @@ public class FormAdministrador extends javax.swing.JPanel {
             // Obtener y actualizar administrador
             Administrador admin = adminController.findAdministrador(usuario.getAdministrador().getIdAdmin());
             admin.setNombre(nombreAdmin.getText());
-            admin.setCorreo(correoAdmin.getText());
+            if (validarCorreo(correoAdmin.getText())) {
+                admin.setCorreo(correoAdmin.getText());
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al actualizar administrador correo invalido ",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
             admin.setTelefono(telefonoAdministrador.getText());
 
             // Guardar cambios
@@ -78,18 +138,57 @@ public class FormAdministrador extends javax.swing.JPanel {
             adminController.edit(admin);
 
             JOptionPane.showMessageDialog(this, "Administrador actualizado exitosamente!");
+            if (panelPadre != null) {
+                panelPadre.notificarCambioUsuario();
+            }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error al actualizar administrador: " + ex.getMessage(),
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-    private void limpiarCampos(){
-        nombreAdmin.setText("Nombre");
-        correoAdmin.setText("correo");
-        telefonoAdministrador.setText("951-000-0000");
-        contrasenaUsuario.setText("12345");
-        idEliminarAdministrador.setText("ID a eliminar");
-        
+
+    public void cargarDatosAdministrador(int idUsuario) {
+        try {
+            UsuarioJpaController usuarioController = new UsuarioJpaController(emf);
+            AdministradorJpaController adminController = new AdministradorJpaController(emf);
+
+            // Buscar el usuario y el administrador
+            Usuario usuario = usuarioController.findUsuario(idUsuario);
+            Administrador admin = adminController.findAdministrador(usuario.getAdministrador().getIdAdmin());
+
+            // Verificar que existan ambos
+            if (usuario != null && admin != null) {
+                // Cargar datos del usuario
+                nombreUsuario.setText(usuario.getNombreUsuario());
+                contrasenaUsuario.setText(usuario.getContrasena());
+
+                // Cargar datos del administrador
+                nombreAdmin.setText(admin.getNombre());
+                correoAdmin.setText(admin.getCorreo());
+                telefonoAdministrador.setText(admin.getTelefono());
+
+                JOptionPane.showMessageDialog(this, "Datos cargados correctamente");
+            } else {
+                
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al cargar datos la id no es de administrador: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void limpiarCampos() {
+        nombreAdmin.setText("");
+        correoAdmin.setText("");
+        telefonoAdministrador.setText("");
+        contrasenaUsuario.setText("");
+        nombreUsuario.setText("");
+        idEliminarAdministrador.setText("");
+    }
+
+    private boolean validarCorreo(String correo) {
+        return correo.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
+
     }
 
     public void eliminarAdministrador(int idUsuario) {
@@ -108,6 +207,9 @@ public class FormAdministrador extends javax.swing.JPanel {
 
                 JOptionPane.showMessageDialog(this, "Administrador eliminado exitosamente!");
                 limpiarCampos();
+                if (panelPadre != null) {
+                    panelPadre.notificarCambioUsuario();
+                }
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error al eliminar administrador: " + ex.getMessage(),
@@ -227,7 +329,7 @@ public class FormAdministrador extends javax.swing.JPanel {
 
         jLabel12.setText("Ingrese el ID a eliminar");
 
-        idEliminarAdministrador.setText("ID a eliminar");
+        idEliminarAdministrador.setText("ID");
         idEliminarAdministrador.setEnabled(false);
 
         eliminarBoton.setBackground(new java.awt.Color(255, 0, 0));
@@ -287,12 +389,12 @@ public class FormAdministrador extends javax.swing.JPanel {
                         .addComponent(editarBox)
                         .addGap(84, 84, 84)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel12)
-                            .addComponent(idEliminarAdministrador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jLabel12)
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(eliminarBoton)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(idEliminarAdministrador, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(eliminarBoton))
                             .addGap(46, 46, 46)))
                     .addComponent(eliminarBox))
                 .addGap(40, 40, 40))
@@ -380,8 +482,13 @@ public class FormAdministrador extends javax.swing.JPanel {
     }//GEN-LAST:event_agregarBoxActionPerformed
 
     private void editarBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarBotonActionPerformed
-        int id = Integer.parseInt(idEliminarAdministrador.getText());
-        editarAdministrador(id);
+        try {
+            int id = Integer.parseInt(idEliminarAdministrador.getText());
+            editarAdministrador(id);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Ingrese un ID válido",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_editarBotonActionPerformed
 
     private void editarBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarBoxActionPerformed
@@ -395,6 +502,17 @@ public class FormAdministrador extends javax.swing.JPanel {
         nombreAdmin.setEnabled(true);
         telefonoAdministrador.setEnabled(true);
         correoAdmin.setEnabled(true);
+
+        // Si ya hay un ID ingresado, cargar los datos automáticamente
+        if (!idEliminarAdministrador.getText().isEmpty() && !idEliminarAdministrador.getText().equals("ID a eliminar")) {
+            try {
+                int id = Integer.parseInt(idEliminarAdministrador.getText());
+                cargarDatosAdministrador(id);
+            } catch (NumberFormatException ex) {
+                }
+        }
+
+
     }//GEN-LAST:event_editarBoxActionPerformed
 
     private void agregarBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarBotonActionPerformed

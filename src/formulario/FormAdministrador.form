@@ -67,13 +67,13 @@
                   </Group>
               </Group>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Group type="103" alignment="1" groupAlignment="0" attributes="0">
-                          <Component id="jLabel12" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="idEliminarAdministrador" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                      <Component id="jLabel12" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
-                          <Component id="eliminarBoton" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="idEliminarAdministrador" alignment="0" max="32767" attributes="0"/>
+                              <Component id="eliminarBoton" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -295,7 +295,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="idEliminarAdministrador">
       <Properties>
-        <Property name="text" type="java.lang.String" value="ID a eliminar"/>
+        <Property name="text" type="java.lang.String" value="ID"/>
         <Property name="enabled" type="boolean" value="false"/>
       </Properties>
     </Component>

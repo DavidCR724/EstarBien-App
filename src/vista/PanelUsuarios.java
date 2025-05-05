@@ -9,14 +9,21 @@ import formulario.FormAdministrador;
 import formulario.FormMedico;
 import formulario.FormPaciente;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
+import modelo.Administrador;
+import modelo.Medico;
+import modelo.Paciente;
 import modelo.Usuario;
 
 /**
@@ -38,6 +45,36 @@ public class PanelUsuarios extends javax.swing.JPanel {
      */
     public PanelUsuarios() {
         initComponents();
+        // Agrega esto al constructor de PanelUsuarios después de initComponents()
+        listaUsuarios.setCellRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index,
+                    boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+                if (value instanceof Usuario) {
+                    Usuario usuario = (Usuario) value;
+                    String texto = usuario.getNombreUsuario() + " (" + usuario.getRol() + ")";
+
+                    // Color diferente según el rol
+                    switch (usuario.getRol()) {
+                        case "administrador":
+                            setForeground(Color.BLUE);
+                            break;
+                        case "medico":
+                            setForeground(new Color(0, 128, 0)); // Verde oscuro
+                            break;
+                        case "paciente":
+                            setForeground(Color.RED);
+                            break;
+                    }
+
+                    setText(texto);
+                }
+
+                return this;
+            }
+        });
         emf = Persistence.createEntityManagerFactory("EstarBienPU");
         cUsuario = new UsuarioJpaController(emf);
         usuarios = cUsuario.findUsuarioEntities();
@@ -50,45 +87,59 @@ public class PanelUsuarios extends javax.swing.JPanel {
 
     public void llenarDatos() {
         model.clear(); // Limpiar lista antes de llenarla
+        usuarios = cUsuario.findUsuarioEntities(); // Actualizar la lista de usuarios
+
         for (Usuario u : usuarios) {
-            model.addElement(u); // Mostrar nombre del usuario
+            // Mostrar información específica según el rol
+            String infoUsuario = u.getNombreUsuario() + " (" + u.getRol() + ")";
+            if (u.getAdministrador() != null) {
+                infoUsuario += " - " + u.getAdministrador().getNombre();
+            } else if (u.getMedico() != null) {
+                infoUsuario += " - " + u.getMedico().getNombre() + " " + u.getMedico().getApellidoPaterno();
+            } else if (u.getPaciente() != null) {
+                infoUsuario += " - " + u.getPaciente().getNombre() + " " + u.getPaciente().getApellidoPaterno();
+            }
+
+            model.addElement(u); // Agregar el usuario con información extendida
         }
     }
 
     private void initPaneles() {
-        formAdministrador = new FormAdministrador();
-        formMedico = new FormMedico();
-        formPaciente = new FormPaciente();
+        formAdministrador = new FormAdministrador(this);
+        formMedico = new FormMedico(this);
+        formPaciente = new FormPaciente(this);
 
         //se agregan los paneles al panelContenedor para mostrar los formularios dependiendo de la seleccion del usuario
         panelContenedor2.add(formAdministrador);
         panelContenedor2.add(formMedico);
         panelContenedor2.add(formPaciente);
 
-        mostrarPanel("mainPanel",formAdministrador);
+        mostrarPanel("mainPanel", formAdministrador);
     }
 
     private void configurarComboBox() {
         comboRol.setModel(new DefaultComboBoxModel<>(new String[]{
             "administrador", "medico", "paciente"}));
-        
+
         comboRol.addActionListener(e -> cambiarFormulario());
     }
-    private void cambiarFormulario(){
+
+    private void cambiarFormulario() {
         String rol = (String) comboRol.getSelectedItem();
-        
+
         switch (rol) {
             case "administrador":
-                mostrarPanel("administrador",formAdministrador);
+                mostrarPanel("administrador", formAdministrador);
                 break;
             case "medico":
-                mostrarPanel("medico",formMedico);
+                mostrarPanel("medico", formMedico);
                 break;
             case "paciente":
-                mostrarPanel("paciente",formPaciente);
+                mostrarPanel("paciente", formPaciente);
                 break;
         }
     }
+
     public void mostrarPanel(String nombrePanel, JPanel panel) {
         if (panelContenedor2.getComponentCount() > 0) {
             for (java.awt.Component comp : panelContenedor2.getComponents()) {
@@ -105,6 +156,12 @@ public class PanelUsuarios extends javax.swing.JPanel {
         layout.show(panelContenedor2, nombrePanel); // Muestra el panel correspondiente
         panelContenedor2.revalidate(); // Fuerza la actualización del contenedor
         panelContenedor2.repaint();    // Redibuja el contenedor
+    }
+
+    public void notificarCambioUsuario() {
+        // Actualizar la lista cuando se agrega/edita/elimina un usuario
+        usuarios = cUsuario.findUsuarioEntities();
+        llenarDatos();
     }
 
     /**
@@ -263,17 +320,53 @@ public class PanelUsuarios extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void recargarUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recargarUsuariosActionPerformed
-
+        // Actualizar la lista de usuarios desde la base de datos
+        usuarios = cUsuario.findUsuarioEntities();
+        llenarDatos();
+        JOptionPane.showMessageDialog(this, "Lista de usuarios actualizada");
     }//GEN-LAST:event_recargarUsuariosActionPerformed
 
     private void listaUsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listaUsuariosMouseClicked
+
         Usuario usuarioSeleccionado = (Usuario) listaUsuarios.getSelectedValue();
         if (usuarioSeleccionado != null) {
-            String datos = "Nombre de Usuario: " + usuarioSeleccionado.getNombreUsuario() + "\n"
-                    + "Rol: " + usuarioSeleccionado.getRol() + "\n"
-                    + "IdUsuario: " + usuarioSeleccionado.getIdUsuario() + "\n";
-            datosUsuario.setText(datos);
+            StringBuilder datos = new StringBuilder();
+            datos.append("Nombre de Usuario: ").append(usuarioSeleccionado.getNombreUsuario()).append("\n")
+                    .append("Rol: ").append(usuarioSeleccionado.getRol()).append("\n")
+                    .append("IdUsuario: ").append(usuarioSeleccionado.getIdUsuario()).append("\n");
+
+            // Mostrar información específica según el rol
+            if (usuarioSeleccionado.getAdministrador() != null) {
+                Administrador admin = usuarioSeleccionado.getAdministrador();
+                datos.append("Tipo: Administrador\n")
+                        .append("Nombre: ").append(admin.getNombre()).append("\n")
+                        .append("Correo: ").append(admin.getCorreo()).append("\n")
+                        .append("Teléfono: ").append(admin.getTelefono());
+            } else if (usuarioSeleccionado.getMedico() != null) {
+                Medico medico = usuarioSeleccionado.getMedico();
+                datos.append("Tipo: Médico\n")
+                        .append("Nombre: ").append(medico.getNombre()).append(" ")
+                        .append(medico.getApellidoPaterno()).append(" ")
+                        .append(medico.getApellidoMaterno()).append("\n")
+                        .append("Especialidad: ").append(medico.getEspecialidad()).append("\n")
+                        .append("Cédula: ").append(medico.getCedulaProfesional());
+            } else if (usuarioSeleccionado.getPaciente() != null) {
+                Paciente paciente = usuarioSeleccionado.getPaciente();
+                datos.append("Tipo: Paciente\n")
+                        .append("Nombre: ").append(paciente.getNombre()).append(" ")
+                        .append(paciente.getApellidoPaterno()).append(" ")
+                        .append(paciente.getApellidoMaterno()).append("\n")
+                        .append("Teléfono: ").append(paciente.getTelefono()).append("\n")
+                        .append("Correo: ").append(paciente.getCorreoElectronico()).append("\n")
+                        .append("Genero: ").append(paciente.getGenero()).append("\n")
+                        .append("Fecha de nac: ").append(paciente.getFechaNacimiento()).append("\n")
+                        .append("Direccion: ").append(paciente.getDireccion()).append("\n")
+                        .append("Alergias: ").append(paciente.getAlergias()).append("\n");
+            }
+
+            datosUsuario.setText(datos.toString());
         }
+
     }//GEN-LAST:event_listaUsuariosMouseClicked
 
 
