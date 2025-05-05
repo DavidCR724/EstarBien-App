@@ -6,6 +6,8 @@ package vista;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Component;
+import java.util.Objects;
 import javax.swing.JPanel;
 
 /**
@@ -52,6 +54,7 @@ public class MainView extends javax.swing.JFrame {
         setTitle("Estar Bien");
         setBackground(new java.awt.Color(255, 255, 255));
         setExtendedState(6);
+        setPreferredSize(new java.awt.Dimension(1250, 800));
 
         panelMenu.setBackground(new java.awt.Color(255, 255, 255));
         panelMenu.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -203,7 +206,7 @@ public class MainView extends javax.swing.JFrame {
         panelMenu.setLayout(panelMenuLayout);
         panelMenuLayout.setHorizontalGroup(
             panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMenuLayout.createSequentialGroup()
+            .addGroup(panelMenuLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(botonInicio)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -232,7 +235,7 @@ public class MainView extends javax.swing.JFrame {
                 .addComponent(botonTratamientos)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(botonUsuarios)
-                .addContainerGap(264, Short.MAX_VALUE))
+                .addContainerGap(907, Short.MAX_VALUE))
         );
         panelMenuLayout.setVerticalGroup(
             panelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -253,37 +256,25 @@ public class MainView extends javax.swing.JFrame {
                     .addComponent(botonRecetas)
                     .addComponent(botonTratamientos)
                     .addComponent(botonUsuarios))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        panelContenedor.setBackground(new java.awt.Color(204, 204, 255));
+        getContentPane().add(panelMenu, java.awt.BorderLayout.NORTH);
+
+        panelContenedor.setBackground(new java.awt.Color(255, 255, 255));
 
         javax.swing.GroupLayout panelContenedorLayout = new javax.swing.GroupLayout(panelContenedor);
         panelContenedor.setLayout(panelContenedorLayout);
         panelContenedorLayout.setHorizontalGroup(
             panelContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1541, Short.MAX_VALUE)
+            .addGap(0, 2184, Short.MAX_VALUE)
         );
         panelContenedorLayout.setVerticalGroup(
             panelContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 457, Short.MAX_VALUE)
+            .addGap(0, 569, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panelContenedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(panelMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelContenedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        getContentPane().add(panelContenedor, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -344,23 +335,33 @@ public class MainView extends javax.swing.JFrame {
         mostrarPanel("Usuarios", new PanelUsuarios());
     }//GEN-LAST:event_botonUsuariosActionPerformed
 
+    /**
+     * Muestra un panel específico en el contenedor utilizando CardLayout. Si el panel ya existe, simplemente lo muestra. Si no existe, lo añade al contenedor antes de mostrarlo.
+     *
+     * @param nombrePanel Identificador único del panel
+     * @param panel Panel a mostrar
+     */
     public void mostrarPanel(String nombrePanel, JPanel panel) {
-        if (panelContenedor.getComponentCount() > 0) {
-            for (java.awt.Component comp : panelContenedor.getComponents()) {
-                if (comp.getName() != null && comp.getName().equals(nombrePanel)) {
-                    CardLayout layout = (CardLayout) panelContenedor.getLayout();
-                    layout.show(panelContenedor, nombrePanel);
-                    return;
-                }
+        CardLayout layout = (CardLayout) panelContenedor.getLayout();
+
+        // Verifica si el panel ya existe en el contenedor
+        boolean panelExiste = false;
+        for (Component comp : panelContenedor.getComponents()) {
+            if (nombrePanel.equals(comp.getName())) {
+                panelExiste = true;
+                break;
             }
         }
-        panel.setName(nombrePanel); // Asigna un nombre único al panel
-        panelContenedor.add(panel, nombrePanel); // Añade el panel al CardLayout
-        CardLayout layout = (CardLayout) panelContenedor.getLayout();
-        layout.show(panelContenedor, nombrePanel); // Muestra el panel correspondiente
-        panelContenedor.revalidate(); // Fuerza la actualización del contenedor
-        panelContenedor.repaint();    // Redibuja el contenedor
-        System.out.println("vista.MainView.mostrarPanel()");
+
+        // Si el panel no existe, lo añade al contenedor
+        if (!panelExiste) {
+            panel.setName(nombrePanel);
+            panelContenedor.add(panel, nombrePanel);
+        }
+
+        // Muestra el panel y actualiza la interfaz
+        layout.show(panelContenedor, nombrePanel);
+        panelContenedor.revalidate();
     }
 
     /**
