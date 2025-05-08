@@ -4,12 +4,17 @@
  */
 package vista;
 
+import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
 /**
  *
  * @author carlo
  */
 public class PanelConfiguracion extends javax.swing.JPanel {
-
+    boolean modoOscuro = true;
     /**
      * Creates new form PanelConfiguracion
      */
@@ -25,11 +30,17 @@ public class PanelConfiguracion extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel2 = new javax.swing.JLabel();
-
-        setBackground(new java.awt.Color(255, 255, 255));
+        temaBoton = new javax.swing.JButton();
 
         jLabel2.setBackground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Panel Configuracion");
+
+        temaBoton.setText("Oscuro");
+        temaBoton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                temaBotonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -39,18 +50,48 @@ public class PanelConfiguracion extends javax.swing.JPanel {
                 .addGap(180, 180, 180)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(754, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(temaBoton)
+                .addGap(49, 49, 49))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(184, 184, 184)
+                .addGap(35, 35, 35)
+                .addComponent(temaBoton)
+                .addGap(124, 124, 124)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(292, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void temaBotonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_temaBotonActionPerformed
+        try {
+            
+        if (!modoOscuro) {
+            FlatMacLightLaf.setup();
+            UIManager.setLookAndFeel(new FlatMacLightLaf());
+            temaBoton.setText("Oscuro");
+        } else {
+            FlatDarculaLaf.setup();
+            UIManager.setLookAndFeel(new FlatDarculaLaf());
+            temaBoton.setText("Claro");
+        }
+
+        modoOscuro = !modoOscuro;
+
+        // Aplica el nuevo LookAndFeel a toda la ventana principal
+        SwingUtilities.updateComponentTreeUI(SwingUtilities.getWindowAncestor(this));
+
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+    }//GEN-LAST:event_temaBotonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JButton temaBoton;
     // End of variables declaration//GEN-END:variables
 }

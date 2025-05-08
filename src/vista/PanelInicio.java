@@ -29,8 +29,6 @@ public class PanelInicio extends javax.swing.JPanel {
 
         jLabel2 = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(255, 255, 255));
-
         jLabel2.setText("Panel inicio");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

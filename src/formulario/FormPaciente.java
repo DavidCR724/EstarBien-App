@@ -310,8 +310,6 @@ public class FormPaciente extends javax.swing.JPanel {
         fechaNac = new javax.swing.JSpinner();
         jLabel13 = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(255, 255, 255));
-
         apellidoPPaciente.setText("Apellido Paterno");
 
         jLabel8.setText("Apellido Materno");

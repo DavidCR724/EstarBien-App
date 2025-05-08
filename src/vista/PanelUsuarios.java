@@ -187,7 +187,6 @@ public class PanelUsuarios extends javax.swing.JPanel {
         jPanel3 = new javax.swing.JPanel();
         recargarUsuarios = new javax.swing.JButton();
 
-        setBackground(new java.awt.Color(255, 255, 255));
         setLayout(new java.awt.BorderLayout());
 
         listaUsuarios.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -199,14 +198,11 @@ public class PanelUsuarios extends javax.swing.JPanel {
 
         add(jScrollPane2, java.awt.BorderLayout.LINE_START);
 
-        datosUsuario.setEditable(false);
         datosUsuario.setColumns(20);
         datosUsuario.setRows(5);
         jScrollPane1.setViewportView(datosUsuario);
 
         add(jScrollPane1, java.awt.BorderLayout.LINE_END);
-
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("Lista de Todos Los Usuarios");
@@ -244,10 +240,6 @@ public class PanelUsuarios extends javax.swing.JPanel {
 
         add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
-        panelContenedorGeneral.setBackground(new java.awt.Color(255, 255, 255));
-
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-
         jLabel2.setText("Selecciona el usuario al que deseas agregar");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -270,7 +262,6 @@ public class PanelUsuarios extends javax.swing.JPanel {
                     .addComponent(jLabel2)))
         );
 
-        panelContenedor2.setBackground(new java.awt.Color(255, 255, 255));
         panelContenedor2.setLayout(new java.awt.CardLayout());
 
         javax.swing.GroupLayout panelContenedorGeneralLayout = new javax.swing.GroupLayout(panelContenedorGeneral);
@@ -289,8 +280,6 @@ public class PanelUsuarios extends javax.swing.JPanel {
         );
 
         add(panelContenedorGeneral, java.awt.BorderLayout.CENTER);
-
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
         recargarUsuarios.setText("recargarUsuarios");
         recargarUsuarios.addActionListener(new java.awt.event.ActionListener() {

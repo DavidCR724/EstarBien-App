@@ -26,8 +26,6 @@ public class PanelFacturas extends javax.swing.JPanel {
 
         jLabel1 = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(255, 255, 255));
-
         jLabel1.setText("Panel facturas");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

@@ -273,8 +273,6 @@ public class FormMedico extends javax.swing.JPanel {
         idEliminarMedico = new javax.swing.JTextField();
         editarBox = new javax.swing.JCheckBox();
 
-        setBackground(new java.awt.Color(255, 255, 255));
-
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("Medico");
 
