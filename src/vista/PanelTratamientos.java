@@ -4,17 +4,48 @@
  */
 package vista;
 
+import control.AdmDatos;
+import control.CitaMedicaJpaController;
+import control.ExpedienteMedicoJpaController;
+import control.MedicoJpaController;
+import control.PacienteJpaController;
+import control.TratamientoJpaController;
+import java.util.List;
+import modelo.CitaMedica;
+import modelo.ExpedienteMedico;
+import modelo.Medico;
+import modelo.ModTabExpediente;
+import modelo.ModTabTratamientos;
+import modelo.Paciente;
+import modelo.Tratamiento;
+
 /**
  *
  * @author carlo
  */
 public class PanelTratamientos extends javax.swing.JPanel {
 
+    private AdmDatos admDatos = new AdmDatos();
+    
+    private TratamientoJpaController cTratamiento;
+    private List<Tratamiento> tratamientos;
+    
+    private ModTabTratamientos modelo;
+    private Paciente paciente;
+    private Medico medico;
+    private CitaMedica cita;
+    private Tratamiento tratamiento;
+
     /**
      * Creates new form PanelTratamientos
      */
     public PanelTratamientos() {
         initComponents();
+        cTratamiento = new TratamientoJpaController(admDatos.getEmf());
+        tratamientos = cTratamiento.findTratamientoEntities();
+        
+        modelo = new ModTabTratamientos(tratamientos);
+        tablaTratamientos.setModel(modelo);
     }
 
     /**
@@ -25,29 +56,52 @@ public class PanelTratamientos extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaTratamientos = new javax.swing.JTable();
 
+        setMaximumSize(new java.awt.Dimension(1397, 882));
+        setMinimumSize(new java.awt.Dimension(1397, 882));
+        setPreferredSize(new java.awt.Dimension(1397, 882));
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         jLabel1.setText("Panel Tratamientos");
+
+        tablaTratamientos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(tablaTratamientos);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(159, 159, 159)
                 .addComponent(jLabel1)
-                .addContainerGap(139, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1397, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(134, 134, 134)
                 .addComponent(jLabel1)
-                .addContainerGap(150, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 719, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tablaTratamientos;
     // End of variables declaration//GEN-END:variables
 }
