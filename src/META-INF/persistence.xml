@@ -28,6 +28,12 @@
       <property name="javax.persistence.jdbc.user" value="postgres"/>
       <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
       <property name="javax.persistence.jdbc.password" value="admin"/>
+      
+        <!-- Configuración de logging para EclipseLink -->
+      <property name="eclipselink.logging.level" value="FINE"/>
+      <property name="eclipselink.logging.timestamp" value="true"/>
+      <property name="eclipselink.logging.thread" value="true"/>
+
     </properties>
   </persistence-unit>
 </persistence>

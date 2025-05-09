@@ -384,6 +384,7 @@ public class FormPaciente extends javax.swing.JPanel {
         editarBoton.setForeground(new java.awt.Color(255, 255, 255));
         editarBoton.setText("Editar");
         editarBoton.setBorderPainted(false);
+        editarBoton.setEnabled(false);
         editarBoton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editarBotonActionPerformed(evt);
