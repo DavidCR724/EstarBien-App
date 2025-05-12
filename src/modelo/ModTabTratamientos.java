@@ -59,6 +59,11 @@ public class ModTabTratamientos extends AbstractTableModel {
         }
 
     }
+    public void actualizar(List<Tratamiento> nuevosTratamientos) {
+        this.tratamientos = nuevosTratamientos;
+        fireTableDataChanged(); // Notifica a la tabla que debe redibujarse
+    }
+    
     
 
 }

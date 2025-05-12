@@ -11,30 +11,34 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author carlo
  */
-public class ModTabPaciente extends AbstractTableModel{
+public class ModTabPaciente extends AbstractTableModel {
+
     private List<Paciente> pacientes;
     private String encabezados[] = {"ID paciente", "ID usuario", "Nombre", "Apellidos", "Fecha Nac", "Genero", "Alergias"};
-    public ModTabPaciente(List<Paciente> pacientes){
+
+    public ModTabPaciente(List<Paciente> pacientes) {
         this.pacientes = pacientes;
     }
 
     @Override
     public int getRowCount() {
-        if(pacientes != null)   
+        if (pacientes != null) {
             return pacientes.size();
+        }
         return 0;
-        
+
     }
 
     @Override
     public int getColumnCount() {
-       return encabezados.length;
+        return encabezados.length;
     }
-    
+
     @Override
-    public String getColumnName(int i){
+    public String getColumnName(int i) {
         return encabezados[i];
     }
+
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
@@ -53,7 +57,12 @@ public class ModTabPaciente extends AbstractTableModel{
             default:
                 return pacientes.get(rowIndex).getAlergias();
         }
-        
+
     }
-    
+
+    public void actualizar(List<Paciente> nuevosPacientes) {
+        this.pacientes = nuevosPacientes;
+        fireTableDataChanged(); // Notifica a la tabla que debe redibujarse
+    }
+
 }

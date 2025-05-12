@@ -14,7 +14,7 @@ import javax.swing.table.AbstractTableModel;
 public class ModTabExpediente extends AbstractTableModel{
     
     private List<ExpedienteMedico> expedientes;
-    private String encabezados[] = {"ID paciente", "Nombre", "Apellidos", "ID expediente", "Tipo Sangre", "Estatura", "Antecedentes", "Alergias"};
+    private String encabezados[] = {"ID paciente", "Nombre", "Apellidos", "ID expediente", "Tipo Sangre", "Estatura", "Peso", "Antecedentes", "Alergias"};
     
     public ModTabExpediente(List<ExpedienteMedico> expedientes){
         this.expedientes = expedientes;
@@ -53,11 +53,17 @@ public class ModTabExpediente extends AbstractTableModel{
             case 5:
                 return expedientes.get(rowIndex).getEstatura();
             case 6:
+                return expedientes.get(rowIndex).getPeso();
+            case 7:
                 return expedientes.get(rowIndex).getAntecedentes();
             default:
                 return expedientes.get(rowIndex).getIdPaciente().getAlergias();
         }
         
+    }
+    public void actualizar(List<ExpedienteMedico> nuevosExpedienteMedicos) {
+        this.expedientes = nuevosExpedienteMedicos;
+        fireTableDataChanged(); // Notifica a la tabla que debe redibujarse
     }
     
 }

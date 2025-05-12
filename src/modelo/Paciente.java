@@ -273,7 +273,7 @@ public class Paciente implements Serializable {
 
     @Override
     public String toString() {
-        return "modelo.Paciente[ idPaciente=" + idPaciente + " ]";
+        return idPaciente + " " + nombre + " " + apellidoPaterno + " " + apellidoMaterno;
     }
     
 }
