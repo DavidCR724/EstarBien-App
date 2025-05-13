@@ -47,9 +47,9 @@ public class ModTabTratamientos extends AbstractTableModel {
             case 1:
                 return tratamientos.get(rowIndex).getIdCita().getIdCita();
             case 2:
-                return tratamientos.get(rowIndex).getIdMedico().getIdMedico();
+                return tratamientos.get(rowIndex).getIdMedico().getIdMedico() + " " + tratamientos.get(rowIndex).getIdMedico().getNombre() + " " + tratamientos.get(rowIndex).getIdMedico().getApellidoPaterno();
             case 3:
-                return tratamientos.get(rowIndex).getIdPaciente().getIdPaciente();
+                return tratamientos.get(rowIndex).getIdPaciente().getIdPaciente() + " " + tratamientos.get(rowIndex).getIdPaciente().getNombre() + " " + tratamientos.get(rowIndex).getIdPaciente().getApellidoPaterno();
             case 4:
                 return tratamientos.get(rowIndex).getDiagnostico();
             case 5:

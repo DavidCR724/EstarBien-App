@@ -52,44 +52,40 @@
                                   <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="femCB" min="-2" max="-2" attributes="0"/>
+                                  <Component id="mascCB" min="-2" max="-2" attributes="0"/>
+                                  <Component id="nombreF" max="32767" attributes="0"/>
+                                  <Component id="apePF" max="32767" attributes="0"/>
+                                  <Component id="apeMF" max="32767" attributes="0"/>
+                                  <Component id="fechNacS" pref="258" max="32767" attributes="0"/>
+                                  <Component id="direccionF" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="telefonoF" max="32767" attributes="0"/>
+                                  <Component id="correoF" max="32767" attributes="0"/>
+                                  <Component id="alergiasF" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="femCB" min="-2" max="-2" attributes="0"/>
-                                          <Component id="mascCB" min="-2" max="-2" attributes="0"/>
-                                          <Component id="nombreF" max="32767" attributes="0"/>
-                                          <Component id="apePF" max="32767" attributes="0"/>
-                                          <Component id="apeMF" max="32767" attributes="0"/>
-                                          <Component id="fechNacS" pref="258" max="32767" attributes="0"/>
-                                          <Component id="direccionF" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="telefonoF" max="32767" attributes="0"/>
-                                          <Component id="correoF" max="32767" attributes="0"/>
-                                      </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="cargPacienteB" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <Component id="cargPacienteB" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                                              <Component id="notaEdit" min="-2" pref="200" max="-2" attributes="0"/>
-                                          </Group>
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <Component id="agregarB" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                                              <Component id="agregarCB" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <Component id="editarB" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                                              <Component id="editarCB" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                          <Group type="102" alignment="0" attributes="0">
-                                              <Component id="eliminarB" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                                              <Component id="eliminarCB" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                      </Group>
+                                      <Component id="notaEdit" min="-2" pref="200" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="alergiasF" min="-2" pref="283" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="agregarB" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="agregarCB" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="editarB" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="editarCB" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="eliminarB" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Component id="eliminarCB" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">

@@ -131,6 +131,7 @@ public class MainView extends javax.swing.JFrame {
 
         recetasItem.setText("Pacientes");
 
+        pacienteItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         pacienteItem.setText("Pacientes");
         pacienteItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -139,6 +140,7 @@ public class MainView extends javax.swing.JFrame {
         });
         recetasItem.add(pacienteItem);
 
+        ExpedienteItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         ExpedienteItem.setText("Expedientes");
         ExpedienteItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -147,6 +149,7 @@ public class MainView extends javax.swing.JFrame {
         });
         recetasItem.add(ExpedienteItem);
 
+        tratamientoItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_3, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         tratamientoItem.setText("Tratamiento");
         tratamientoItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -155,6 +158,7 @@ public class MainView extends javax.swing.JFrame {
         });
         recetasItem.add(tratamientoItem);
 
+        Recetas.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_4, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         Recetas.setText("Recetas");
         Recetas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
