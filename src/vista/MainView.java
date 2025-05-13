@@ -4,6 +4,7 @@
  */
 package vista;
 
+import vista.Pagos.PanelPagos;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
