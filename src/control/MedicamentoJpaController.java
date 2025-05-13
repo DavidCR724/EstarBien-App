@@ -242,9 +242,4 @@ public class MedicamentoJpaController implements Serializable {
         }
     }
     
-    
-
-    
-
-    
 }

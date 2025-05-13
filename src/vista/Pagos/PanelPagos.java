@@ -4,6 +4,7 @@
  */
 package vista.Pagos;
 
+import control.AdmDatos;
 import control.PagoJpaController;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -22,7 +23,7 @@ public class PanelPagos extends javax.swing.JPanel {
     
     public PanelPagos() {
         initComponents();
-        pagoController = new PagoJpaController();
+        pagoController = new PagoJpaController(admDatos.getEmf());
         modeloTablaHistorial = (DefaultTableModel) tablaHistorial.getModel();
         cargarTablaHistorial();
         // Configura el buscador
@@ -177,4 +178,5 @@ public class PanelPagos extends javax.swing.JPanel {
     //Declaración de variables modificables
     private DefaultTableModel modeloTablaHistorial;
     private PagoJpaController pagoController;
+    private AdmDatos admDatos = new AdmDatos();
 }

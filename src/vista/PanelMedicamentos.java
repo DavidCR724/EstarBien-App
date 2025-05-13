@@ -467,7 +467,6 @@ public class PanelMedicamentos extends javax.swing.JPanel {
     private int anchoObjetivo = 490; // Ancho deseado del formulario
     private int velocidadDeslizamiento = 20; // Aumentado para animación más fluida
     private int anchoActual = 0; // Nuevo campo para rastrear el ancho actual
-    private MedicamentoJpaController medicamentoController = new MedicamentoJpaController(); //Inicializamos el controlador
     private DefaultTableModel modeloTabla; //Inicializamos el modelo de la tabla para cargarla
 
 }
