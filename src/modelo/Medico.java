@@ -253,7 +253,7 @@ public class Medico implements Serializable {
 
     @Override
     public String toString() {
-        return "modelo.Medico[ idMedico=" + idMedico + " ]";
+        return idMedico + " " + nombre + " " + apellidoPaterno + " " + apellidoMaterno;
     }
     
 }

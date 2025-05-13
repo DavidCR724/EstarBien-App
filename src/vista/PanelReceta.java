@@ -4,17 +4,31 @@
  */
 package vista;
 
+import control.AdmDatos;
+import control.RecetaMedicamentoJpaController;
+import java.util.List;
+import modelo.ModTabReceta;
+import modelo.RecetaMedicamento;
+
 /**
  *
  * @author carlo
  */
 public class PanelReceta extends javax.swing.JPanel {
-
+    private AdmDatos admDatos = new AdmDatos();
+    private RecetaMedicamentoJpaController cRecetaMedicamento;
+    private List<RecetaMedicamento> recetasMedicamentos;
+    private ModTabReceta modelo;
+    
     /**
      * Creates new form PanelReceta
      */
     public PanelReceta() {
         initComponents();
+        cRecetaMedicamento = new RecetaMedicamentoJpaController(admDatos.getEmf());
+        recetasMedicamentos = cRecetaMedicamento.findRecetaMedicamentoEntities();
+        modelo = new ModTabReceta(recetasMedicamentos);
+        tablaRecetas.setModel(modelo);
     }
 
     /**
@@ -25,29 +39,51 @@ public class PanelReceta extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaRecetas = new javax.swing.JTable();
 
+        setMaximumSize(new java.awt.Dimension(1397, 882));
+        setMinimumSize(new java.awt.Dimension(1397, 882));
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         jLabel1.setText("Panel Recetas");
+
+        tablaRecetas.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(tablaRecetas);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(185, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1)
-                .addGap(143, 143, 143))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1397, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(149, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel1)
-                .addGap(135, 135, 135))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 717, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tablaRecetas;
     // End of variables declaration//GEN-END:variables
 }
