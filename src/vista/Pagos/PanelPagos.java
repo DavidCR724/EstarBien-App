@@ -150,12 +150,12 @@ public class PanelPagos extends javax.swing.JPanel {
             modeloTablaHistorial.setRowCount(0);
 
             // Obtener datos usando la instancia existente del controlador
-            List<Object[]> datos = pagoController.obtenerDatosTabla();
-
-            // Agregar datos
-            for (Object[] fila : datos) {
-                modeloTablaHistorial.addRow(fila);
-            }
+//            List<Object[]> datos = pagoController.obtenerDatosTabla();
+//
+//            // Agregar datos
+//            for (Object[] fila : datos) {
+//                modeloTablaHistorial.addRow(fila);
+//            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, 
                 "Error al cargar datos: " + e.getMessage(), 
