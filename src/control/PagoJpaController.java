@@ -24,6 +24,7 @@ import modelo.Pago;
  *
  * @author carlo
  */
+
 public class PagoJpaController implements Serializable {
 
     public PagoJpaController(EntityManagerFactory emf) {
@@ -255,5 +256,4 @@ public class PagoJpaController implements Serializable {
             em.close();
         }
     }
-    
 }
