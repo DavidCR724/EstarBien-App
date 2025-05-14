@@ -5,10 +5,9 @@
         <group>
             <file>file:/C:/Users/carlo/Documents/Proyecto%20Limonada/EstarBien-App/src/control/MedicamentoJpaController.java</file>
             <file>file:/C:/Users/carlo/Documents/Proyecto%20Limonada/EstarBien-App/src/control/PagoJpaController.java</file>
-            <file>file:/C:/Users/carlo/Documents/Proyecto%20Limonada/EstarBien-App/src/modelo/Medicamento.java</file>
+            <file>file:/C:/Users/carlo/Documents/Proyecto%20Limonada/EstarBien-App/src/vista/PanelMedicamentos.java</file>
             <file>file:/C:/Users/carlo/Documents/Proyecto%20Limonada/EstarBien-App/src/vista/Pagos/PanelPagos.java</file>
-            <file>file:/C:/Users/carlo/Documents/Proyecto%20Limonada/EstarBien-App/src/META-INF/persistence.xml</file>
-            <file>file:/C:/Users/carlo/Documents/Proyecto%20Limonada/EstarBien-App/src/vista/MainView.java</file>
+            <file>file:/C:/Users/carlo/Documents/Proyecto%20Limonada/EstarBien-App/src/vista/PanelInventario.java</file>
             <file>file:/C:/Users/carlo/Documents/Proyecto%20Limonada/EstarBien-App/src/modelo/Pago.java</file>
         </group>
     </open-files>
