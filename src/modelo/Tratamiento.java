@@ -183,7 +183,7 @@ public class Tratamiento implements Serializable {
 
     @Override
     public String toString() {
-        return "modelo.Tratamiento[ idTratamiento=" + idTratamiento + " ]";
+        return idTratamiento + " > " + duracion;
     }
     
 }

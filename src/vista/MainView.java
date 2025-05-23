@@ -6,31 +6,24 @@ package vista;
 
 import vista.Pagos.PanelPagos;
 import com.formdev.flatlaf.FlatLaf;
-import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import control.AdmDatos;
-import control.UsuarioJpaController;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.InputStream;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import modelo.Usuario;
-
 /**
  *
  * @author carlo
  */
 public class MainView extends javax.swing.JFrame {
-
+    private PanelConfiguracion panelConf = new PanelConfiguracion();
     /**
      * Creates new form MainView
      */
@@ -63,7 +56,9 @@ public class MainView extends javax.swing.JFrame {
 
         initComponents();
         panelContenedor.setLayout(new CardLayout());
-        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+//        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+        mostrarPanel("Configuracion", panelConf);
+        mostrarPanel("Inicio", new PanelInicioSesion());
     }
 
     /**
@@ -306,7 +301,7 @@ public class MainView extends javax.swing.JFrame {
 
     private void configMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_configMenuMouseClicked
         // TODO add your handling code here:        
-        mostrarPanel("Configuracion", new PanelConfiguracion());
+        mostrarPanel("Configuracion", panelConf);
     }//GEN-LAST:event_configMenuMouseClicked
 
     private void inicioMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inicioMenuMouseClicked

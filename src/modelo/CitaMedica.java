@@ -245,7 +245,7 @@ public class CitaMedica implements Serializable {
 
     @Override
     public String toString() {
-        return idCita + " paciente " + idPaciente;
+        return " paciente " + idPaciente;
     }
     
 }
