@@ -25,8 +25,8 @@ import modelo.Usuario;
  * @author carlo
  */
 public class MainView extends javax.swing.JFrame {
-    private PanelConfiguracion panelConf = new PanelConfiguracion();
-    public PanelInicioSesion panelIniSes = new PanelInicioSesion();
+    private PanelConfiguracion panelConf;
+    public PanelInicioSesion panelIniSes;
     /**
      * Creates new form MainView
      */
@@ -56,7 +56,8 @@ public class MainView extends javax.swing.JFrame {
 
         // Aplicar el nuevo Look & Feel al árbol de componentes
         SwingUtilities.updateComponentTreeUI(this);
-
+        panelIniSes = new PanelInicioSesion();
+        panelConf = new PanelConfiguracion();
         initComponents();
         ocultarTodosLosMenus();
         panelContenedor.setLayout(new CardLayout());

@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 import modelo.CitaMedica;
 import modelo.Medicamento;
+import modelo.Medico;
 import modelo.ModTabReceta;
 import modelo.ModTabRecetaMed;
 import modelo.ModTabTratamientoAux;
@@ -198,6 +199,9 @@ public class PanelReceta extends javax.swing.JPanel {
         duracionField = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         cantidadSpinner = new javax.swing.JSpinner();
+        buscBot = new javax.swing.JButton();
+        buscadorField = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
 
         setMaximumSize(new java.awt.Dimension(1397, 882));
         setMinimumSize(new java.awt.Dimension(1397, 882));
@@ -371,6 +375,15 @@ public class PanelReceta extends javax.swing.JPanel {
 
         cantidadSpinner.setModel(new javax.swing.SpinnerNumberModel(1, null, 100, 1));
 
+        buscBot.setText("Mis Recetas Preescritas");
+        buscBot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buscBotActionPerformed(evt);
+            }
+        });
+
+        jLabel12.setText("Ingresa tu ID o nombre:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -380,14 +393,16 @@ public class PanelReceta extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(buscadorField, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(buscBot)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(updateTablesButt))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 683, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane5))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jLabel5)
@@ -421,52 +436,54 @@ public class PanelReceta extends javax.swing.JPanel {
                                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 709, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel6)))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(cargarBot)
-                                .addGap(38, 38, 38)
-                                .addComponent(addBot)
-                                .addGap(18, 18, 18)
-                                .addComponent(editBot)
-                                .addGap(18, 18, 18)
-                                .addComponent(deleteBot)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(cargarBot)
+                                        .addGap(38, 38, 38)
+                                        .addComponent(addBot)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(addCB)
+                                        .addGap(107, 107, 107)
+                                        .addComponent(editBot)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(editarCB)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(deleteBot)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(eliminarCB))
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 683, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane5)))))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(174, 174, 174)
-                .addComponent(addCB)
-                .addGap(78, 78, 78)
-                .addComponent(editarCB)
-                .addGap(76, 76, 76)
-                .addComponent(eliminarCB)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addComponent(updateTablesButt, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(updateTablesButt)
+                        .addComponent(buscBot)
+                        .addComponent(buscadorField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel12)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(cargarBot)
-                            .addComponent(addBot)
-                            .addComponent(editBot)
-                            .addComponent(deleteBot))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(addCB)
-                            .addComponent(eliminarCB)))
-                    .addComponent(editarCB))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(cargarBot)
+                        .addComponent(addBot)
+                        .addComponent(editBot)
+                        .addComponent(deleteBot))
+                    .addComponent(eliminarCB)
+                    .addComponent(editarCB)
+                    .addComponent(addCB))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -845,6 +862,17 @@ public class PanelReceta extends javax.swing.JPanel {
         activarMedicamentos(false);
     }//GEN-LAST:event_noCBActionPerformed
 
+    private void buscBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscBotActionPerformed
+        String criterio = buscadorField.getText().trim();
+        if (!criterio.isEmpty()) {
+            buscarPorMedico(criterio);
+        } else {
+            // Si está vacío, mostramos todas las recetas
+            modeloReceta = new ModTabReceta(recetasMedicas);
+            tablaRecetas.setModel(modeloReceta);
+        }
+    }//GEN-LAST:event_buscBotActionPerformed
+
     private void limpiarCampos() {
         instruccTA.setText("");
         dosisField.setText("");
@@ -867,11 +895,33 @@ public class PanelReceta extends javax.swing.JPanel {
 
     }
 
+    private void buscarPorMedico(String criterio) {
+        List<RecetaMedica> filtradas = new ArrayList<>();
+        for (RecetaMedica receta : recetasMedicas) {
+            CitaMedica cita = receta.getIdCita();
+            Medico medico = cita.getIdMedico(); // Asegúrate que la cita tenga un médico asociado
+
+            if (medico != null) {
+                String nombreCompleto = medico.getNombre() + " " + medico.getApellidoPaterno() + " " + medico.getApellidoMaterno();
+                String idMedico = String.valueOf(medico.getIdMedico());
+
+                if (nombreCompleto.toLowerCase().contains(criterio.toLowerCase()) || idMedico.equals(criterio)) {
+                    filtradas.add(receta);
+                }
+            }
+        }
+
+        modeloReceta = new ModTabReceta(filtradas);
+        tablaRecetas.setModel(modeloReceta);
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup accionesGrupo;
     private javax.swing.ButtonGroup activarMedicamento;
     private javax.swing.JButton addBot;
     private javax.swing.JCheckBox addCB;
+    private javax.swing.JButton buscBot;
+    private javax.swing.JTextField buscadorField;
     private javax.swing.JSpinner cantidadSpinner;
     private javax.swing.JButton cargarBot;
     private javax.swing.JTextField citafield;
@@ -889,6 +939,7 @@ public class PanelReceta extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
