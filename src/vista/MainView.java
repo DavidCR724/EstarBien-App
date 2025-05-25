@@ -8,6 +8,7 @@ import vista.Pagos.PanelPagos;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import control.AdmDatos;
+import control.Sesion;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.EventQueue;
@@ -18,12 +19,14 @@ import java.io.InputStream;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import modelo.Usuario;
 /**
  *
  * @author carlo
  */
 public class MainView extends javax.swing.JFrame {
     private PanelConfiguracion panelConf = new PanelConfiguracion();
+    public PanelInicioSesion panelIniSes = new PanelInicioSesion();
     /**
      * Creates new form MainView
      */
@@ -55,10 +58,11 @@ public class MainView extends javax.swing.JFrame {
         SwingUtilities.updateComponentTreeUI(this);
 
         initComponents();
+        ocultarTodosLosMenus();
         panelContenedor.setLayout(new CardLayout());
 //        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         mostrarPanel("Configuracion", panelConf);
-        mostrarPanel("Inicio", new PanelInicioSesion());
+        mostrarPanel("Inicio", new PanelInicio());
     }
 
     /**
@@ -72,7 +76,7 @@ public class MainView extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         inicioMenu = new javax.swing.JMenu();
         configMenu = new javax.swing.JMenu();
-        recetasItem = new javax.swing.JMenu();
+        pacientesMenu = new javax.swing.JMenu();
         pacienteItem = new javax.swing.JMenuItem();
         ExpedienteItem = new javax.swing.JMenuItem();
         tratamientoItem = new javax.swing.JMenuItem();
@@ -125,7 +129,7 @@ public class MainView extends javax.swing.JFrame {
         });
         jMenuBar1.add(configMenu);
 
-        recetasItem.setText("Pacientes");
+        pacientesMenu.setText("Pacientes");
 
         pacienteItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_1, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         pacienteItem.setText("Pacientes");
@@ -134,7 +138,7 @@ public class MainView extends javax.swing.JFrame {
                 pacienteItemActionPerformed(evt);
             }
         });
-        recetasItem.add(pacienteItem);
+        pacientesMenu.add(pacienteItem);
 
         ExpedienteItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_2, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         ExpedienteItem.setText("Expedientes");
@@ -143,7 +147,7 @@ public class MainView extends javax.swing.JFrame {
                 ExpedienteItemActionPerformed(evt);
             }
         });
-        recetasItem.add(ExpedienteItem);
+        pacientesMenu.add(ExpedienteItem);
 
         tratamientoItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_3, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         tratamientoItem.setText("Tratamiento");
@@ -152,7 +156,7 @@ public class MainView extends javax.swing.JFrame {
                 tratamientoItemActionPerformed(evt);
             }
         });
-        recetasItem.add(tratamientoItem);
+        pacientesMenu.add(tratamientoItem);
 
         Recetas.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_4, java.awt.event.InputEvent.CTRL_DOWN_MASK));
         Recetas.setText("Recetas");
@@ -161,9 +165,9 @@ public class MainView extends javax.swing.JFrame {
                 RecetasActionPerformed(evt);
             }
         });
-        recetasItem.add(Recetas);
+        pacientesMenu.add(Recetas);
 
-        jMenuBar1.add(recetasItem);
+        jMenuBar1.add(pacientesMenu);
 
         adminMenu.setText("Administrador");
 
@@ -291,7 +295,7 @@ public class MainView extends javax.swing.JFrame {
 
     private void sesionMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sesionMenuMouseClicked
         // TODO add your handling code here:
-        mostrarPanel("IniciarSesion", new PanelInicioSesion());
+        mostrarPanel("IniciarSesion", panelIniSes);
     }//GEN-LAST:event_sesionMenuMouseClicked
 
     private void notiMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_notiMenuMouseClicked
@@ -396,7 +400,83 @@ public class MainView extends javax.swing.JFrame {
             mainView.setVisible(true);
         });
     }
+    public void actualizarVisibilidadMenusPorRol() {
+        ocultarTodosLosMenus(); // Primero ocultamos todo
 
+        Usuario usuario = Sesion.getUsuarioActual();
+
+        if (usuario == null) {
+            // Solo se muestra lo básico si no hay sesión
+            inicioMenu.setVisible(true);
+            sesionMenu.setVisible(true);
+            configMenu.setVisible(true);
+            return;
+        }
+
+        String rol = usuario.getRol().toLowerCase();
+
+        switch (rol) {
+            case "administrador":
+                pacientesMenu.setVisible(true);
+                jMenu3.setVisible(true);
+                adminMenu.setVisible(true);
+                configMenu.setVisible(true);
+                notiMenu.setVisible(true);
+                citasItem.setVisible(true);
+                tratamientoItem.setVisible(true);
+                medicamentoItem.setVisible(true);
+                facturasItem.setVisible(true);
+                pagosItem.setVisible(true);
+                usuariosItem.setVisible(true);
+                invenItem.setVisible(true);
+                ExpedienteItem.setVisible(true);
+                Recetas.setVisible(true);
+                break;
+
+            case "medico":
+                pacientesMenu.setVisible(true);
+                jMenu3.setVisible(true);
+                configMenu.setVisible(true);
+                notiMenu.setVisible(true);
+                citasItem.setVisible(true);
+                tratamientoItem.setVisible(true);
+                ExpedienteItem.setVisible(true);
+                Recetas.setVisible(true);
+                break;
+
+            case "paciente":
+                configMenu.setVisible(true);
+                notiMenu.setVisible(true);
+                break;
+        }
+
+        // Siempre visibles
+        inicioMenu.setVisible(true);
+        sesionMenu.setVisible(true);
+    }
+
+    public void ocultarTodosLosMenus() {
+        // Oculta todo
+        pacientesMenu.setVisible(false);
+        jMenu3.setVisible(false); // Este es el JMenu3 que mencionaste
+        adminMenu.setVisible(false);
+        configMenu.setVisible(false);
+        notiMenu.setVisible(false);
+        citasItem.setVisible(false);
+        tratamientoItem.setVisible(false);
+        medicamentoItem.setVisible(false);
+        facturasItem.setVisible(false);
+        pagosItem.setVisible(false);
+        usuariosItem.setVisible(false);
+        invenItem.setVisible(false);
+        ExpedienteItem.setVisible(false);
+        Recetas.setVisible(false);
+
+        // Solo visibles por defecto
+        inicioMenu.setVisible(true);
+        sesionMenu.setVisible(true);
+        configMenu.setVisible(true); // Configuración sí quieres que esté siempre visible
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem ExpedienteItem;
@@ -412,9 +492,9 @@ public class MainView extends javax.swing.JFrame {
     private javax.swing.JMenuItem medicamentoItem;
     private javax.swing.JMenu notiMenu;
     private javax.swing.JMenuItem pacienteItem;
+    private javax.swing.JMenu pacientesMenu;
     private javax.swing.JMenuItem pagosItem;
     private javax.swing.JPanel panelContenedor;
-    private javax.swing.JMenu recetasItem;
     private javax.swing.JMenu sesionMenu;
     private javax.swing.JMenuItem tratamientoItem;
     private javax.swing.JMenuItem usuariosItem;

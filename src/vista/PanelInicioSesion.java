@@ -5,12 +5,14 @@
 package vista;
 
 import control.AdmDatos;
+import control.Sesion;
 import control.UsuarioJpaController;
 import java.awt.CardLayout;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import modelo.Usuario;
 
 /**
@@ -152,6 +154,11 @@ public class PanelInicioSesion extends javax.swing.JPanel {
 
         // Mostrar mensaje de inicio de sesión exitoso
         JOptionPane.showMessageDialog(this, "Inicio de sesión exitoso", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        Sesion.iniciarSesion(usuarioAutenticado);  // Guardamos al usuario
+
+        MainView mainView = (MainView) SwingUtilities.getWindowAncestor(this);
+        mainView.actualizarVisibilidadMenusPorRol();
+        mainView.mostrarPanel("Inicio", new PanelInicio());
 
         // Acceso autorizado: cambiar de panel
         java.awt.Container parent = this.getParent();

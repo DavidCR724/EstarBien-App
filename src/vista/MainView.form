@@ -20,7 +20,7 @@
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="configMenuMouseClicked"/>
           </Events>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="recetasItem">
+        <Menu class="javax.swing.JMenu" name="pacientesMenu">
           <Properties>
             <Property name="text" type="java.lang.String" value="Pacientes"/>
           </Properties>
