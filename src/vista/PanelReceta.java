@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
@@ -25,6 +26,7 @@ import modelo.Medicamento;
 import modelo.ModTabReceta;
 import modelo.ModTabRecetaMed;
 import modelo.ModTabTratamientoAux;
+import modelo.Paciente;
 import modelo.RecetaMedica;
 import modelo.RecetaMedicamento;
 import modelo.Tratamiento;
@@ -46,13 +48,20 @@ public class PanelReceta extends javax.swing.JPanel {
     private List<Tratamiento> tratamientos;
     private List<RecetaMedica> recetasMedicas;
     private List<Medicamento> medicamentos;
-    private HashMap<String, Medicamento> medicamentosMap;
+    private HashMap<String, Medicamento> medicamentosMap = new HashMap<>();
+    private HashMap<String, CitaMedica> citasMap = new HashMap<>();
+    private HashMap<Integer, Tratamiento> tratamientosMap = new HashMap<>();
+    private List<Tratamiento> tratamientosSinReceta = new ArrayList<>();
 
     private ModTabRecetaMed modelo;
     private ModTabTratamientoAux modTabTratamiento;
     private ModTabReceta modeloReceta;
-    
-    
+
+    private CitaMedica citaN;
+    private Tratamiento tratN;
+    private RecetaMedica newRM;
+    private RecetaMedicamento newRMed;
+
     /**
      * Creates new form PanelReceta
      */
@@ -69,11 +78,31 @@ public class PanelReceta extends javax.swing.JPanel {
         modelo = new ModTabRecetaMed(recetasMedicamentos);
 
         tablaRecetas.setModel(modeloReceta);
+        activarMedicamentos(false);
         cargar();
 
     }
 
     private void cargar() {
+        cargarTratamientos();
+
+        cMedicamento = new MedicamentoJpaController(admDatos.getEmf());
+        medicamentos = cMedicamento.findMedicamentoEntities();
+        medicamentosMap = new HashMap<>();
+
+        for (Medicamento med : medicamentos) {
+            String strMed = med.getIdMedicamento() + " > " + med.getNombre();
+            comboMedi.addItem(strMed);
+            medicamentosMap.put(strMed, med);
+        }
+        infoTabla.setModel(modTabTratamiento);
+
+    }
+
+    private void cargarTratamientos() {
+        citasMap.clear();
+        tratamientosMap.clear();
+        tratamientosSinReceta.clear();
         cTratamientos = new TratamientoJpaController(admDatos.getEmf());
         tratamientos = cTratamientos.findTratamientoEntities();
 
@@ -84,22 +113,42 @@ public class PanelReceta extends javax.swing.JPanel {
                 .collect(Collectors.toSet());
 
         // Filtrar tratamientos sin receta
-        List<Tratamiento> tratamientosSinReceta = tratamientos.stream()
-                .filter(t -> !tratamientosConReceta.contains(t.getIdTratamiento()))
-                .collect(Collectors.toList());
-
-        modTabTratamiento = new ModTabTratamientoAux(tratamientosSinReceta);
-        infoTabla.setModel(modTabTratamiento);
-        
-        cMedicamento = new MedicamentoJpaController(admDatos.getEmf());
-        medicamentos = cMedicamento.findMedicamentoEntities();
-        medicamentosMap = new HashMap<>();
-        
-        for(Medicamento med: medicamentos){
-            String strMed = med.getIdMedicamento()+" > "+med.getNombre();
-            comboMedi.addItem(strMed);
-            medicamentosMap.put(strMed, med);
+        for (Tratamiento t : tratamientos) {
+            if (!tratamientosConReceta.contains(t.getIdTratamiento())) {
+                tratamientosSinReceta.add(t);
+                String strNomP = t.getIdPaciente().getNombre() + " " + t.getIdPaciente().getApellidoPaterno() + " " + t.getIdPaciente().getApellidoMaterno();
+                citasMap.put(strNomP, t.getIdCita());
+                tratamientosMap.put(t.getIdTratamiento(), t);
+            }
         }
+        modTabTratamiento = new ModTabTratamientoAux(tratamientosSinReceta);
+    }
+
+    private void actualizarTablas() {
+        cRecetaMedicamento = new RecetaMedicamentoJpaController(admDatos.getEmf());
+        cRecetaMedica = new RecetaMedicaJpaController(admDatos.getEmf());
+
+        recetasMedicamentos = cRecetaMedicamento.findRecetaMedicamentoEntities();
+        recetasMedicas = cRecetaMedica.findRecetaMedicaEntities();
+        List<RecetaMedica> recetasFiltrada = new ArrayList<>();
+
+        modeloReceta.actualizar(recetasMedicas);
+        int filaSeleccionada = tablaRecetas.getSelectedRow();
+        if (filaSeleccionada != -1) {
+            int noReceta = (int) tablaRecetas.getValueAt(filaSeleccionada, 3);
+            cRecetaMedica = new RecetaMedicaJpaController(admDatos.getEmf());
+            recetasMedicas = cRecetaMedica.findRecetaMedicaEntities();
+            for (RecetaMedica rm : recetasMedicas) {
+                if (rm.getIdReceta() == noReceta) {
+                    recetasFiltrada.add(rm);
+                }
+            }
+            modeloReceta = new ModTabReceta(recetasFiltrada);
+            tabRMedica.setModel(modeloReceta);
+
+        }
+        cargar();
+        detalleTrat.setText("");
     }
 
     /**
@@ -290,6 +339,7 @@ public class PanelReceta extends javax.swing.JPanel {
         });
 
         activarMedicamento.add(noCB);
+        noCB.setSelected(true);
         noCB.setText("No");
         noCB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -315,15 +365,11 @@ public class PanelReceta extends javax.swing.JPanel {
 
         jLabel9.setText("Frecuencia");
 
-        frecuenciaField.setEditable(false);
-
         jLabel10.setText("Duración");
-
-        duracionField.setEditable(false);
 
         jLabel11.setText("Cantidad");
 
-        cantidadSpinner.setEnabled(false);
+        cantidadSpinner.setModel(new javax.swing.SpinnerNumberModel(1, null, 100, 1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -344,13 +390,13 @@ public class PanelReceta extends javax.swing.JPanel {
                                 .addComponent(jScrollPane5))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel4)
                                     .addComponent(jLabel5)
                                     .addComponent(jLabel2)
                                     .addComponent(jScrollPane2)
                                     .addComponent(citafield)
-                                    .addComponent(pacientefield))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 228, Short.MAX_VALUE)
+                                    .addComponent(pacientefield)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 222, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(19, 19, 19)
@@ -501,7 +547,8 @@ public class PanelReceta extends javax.swing.JPanel {
         addBot.setEnabled(false);
         editBot.setEnabled(false);
         deleteBot.setEnabled(false);
-
+        limpiarCampos();
+        activarMedicamentos(true);
         List<RecetaMedica> recetasFiltrada = new ArrayList<>();
         int filaSeleccionada = tablaRecetas.getSelectedRow();
         if (filaSeleccionada != -1) {
@@ -531,36 +578,16 @@ public class PanelReceta extends javax.swing.JPanel {
                     + "Fecha: " + infoTabla.getValueAt(filaSeleccionada, 2) + "\n"
                     + "Diagnostico: " + infoTabla.getValueAt(filaSeleccionada, 3)
             );
+            pacientefield.setText((String) infoTabla.getValueAt(filaSeleccionada, 0));
+            citafield.setText((String) infoTabla.getValueAt(filaSeleccionada, 2));
         }
 
 
     }//GEN-LAST:event_infoTablaMouseClicked
 
     private void updateTablesButtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateTablesButtActionPerformed
-        cRecetaMedicamento = new RecetaMedicamentoJpaController(admDatos.getEmf());
-        cRecetaMedica = new RecetaMedicaJpaController(admDatos.getEmf());
-
-        recetasMedicamentos = cRecetaMedicamento.findRecetaMedicamentoEntities();
-        recetasMedicas = cRecetaMedica.findRecetaMedicaEntities();
-        List<RecetaMedica> recetasFiltrada = new ArrayList<>();
-
-        modeloReceta.actualizar(recetasMedicas);
-        int filaSeleccionada = tablaRecetas.getSelectedRow();
-        if (filaSeleccionada != -1) {
-            int noReceta = (int) tablaRecetas.getValueAt(filaSeleccionada, 3);
-            cRecetaMedica = new RecetaMedicaJpaController(admDatos.getEmf());
-            recetasMedicas = cRecetaMedica.findRecetaMedicaEntities();
-            for (RecetaMedica rm : recetasMedicas) {
-                if (rm.getIdReceta() == noReceta) {
-                    recetasFiltrada.add(rm);
-                }
-            }
-            modeloReceta = new ModTabReceta(recetasFiltrada);
-            tabRMedica.setModel(modeloReceta);
-
-        }
-        cargar();
-        detalleTrat.setText("");
+        actualizarTablas();
+        limpiarCampos();
     }//GEN-LAST:event_updateTablesButtActionPerformed
 
     private void cargarBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarBotActionPerformed
@@ -600,8 +627,8 @@ public class PanelReceta extends javax.swing.JPanel {
 
             if (tieneMedicamentos == true) {
                 int indice = -1;
-                for(int i = 0; i < medicamentos.size(); i ++){
-                    if(medicamentos.get(i).getIdMedicamento() == rmed.getIdMedicamento().getIdMedicamento()){
+                for (int i = 0; i < medicamentos.size(); i++) {
+                    if (medicamentos.get(i).getIdMedicamento() == rmed.getIdMedicamento().getIdMedicamento()) {
                         indice = i;
                         break;
                     }
@@ -620,25 +647,225 @@ public class PanelReceta extends javax.swing.JPanel {
     }//GEN-LAST:event_cargarBotActionPerformed
 
     private void addBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBotActionPerformed
-        // TODO add your handling code here:
+        int filaSelect = (int) infoTabla.getSelectedRow();
+        int idTrata = -1;
+        if (filaSelect != -1) {
+            idTrata = (int) infoTabla.getValueAt(filaSelect, 4);
+        } else {
+            JOptionPane.showMessageDialog(this, "Seleccione un tratamiento", "Campos Requeridos", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (instruccTA.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Las instrucciones son necesarias", "Campos Requeridos", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (siCB.isSelected()) {
+            if (dosisField.getText().trim().isEmpty()
+                    || frecuenciaField.getText().trim().isEmpty()
+                    || duracionField.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor llena todo los campos de medicamento", "Campos Requeridos", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        }
+        try {
+            cRecetaMedica = new RecetaMedicaJpaController(admDatos.getEmf());
+            cRecetaMedicamento = new RecetaMedicamentoJpaController(admDatos.getEmf());
+            cTratamientos = new TratamientoJpaController(admDatos.getEmf());
+            String keyPac = (String) infoTabla.getValueAt(filaSelect, 0);
+            int keyTrat = (int) infoTabla.getValueAt(filaSelect, 4);;
+
+            citaN = (CitaMedica) citasMap.get(keyPac);
+            tratN = (Tratamiento) tratamientosMap.get(keyTrat);
+            newRM = new RecetaMedica();
+            newRMed = new RecetaMedicamento();
+
+            if (noCB.isSelected()) {
+                newRM.setCreatedAt(new Date());
+                newRM.setIdCita(citaN);
+                newRM.setIdTratamiento(tratN);
+                newRM.setFechaEmision(new Date());
+                newRM.setInstrucciones(instruccTA.getText());
+
+                cRecetaMedica.create(newRM);
+                recetasMedicas = cRecetaMedica.findRecetaMedicaEntities();
+                modeloReceta.actualizar(recetasMedicas);
+                tratamientos = cTratamientos.findTratamientoEntities();
+                actualizarTablas();
+                JOptionPane.showMessageDialog(this, "Receta agregado correctamente", "Informacion importante", JOptionPane.INFORMATION_MESSAGE);
+            } else if (siCB.isSelected()) {
+                String keyMed = (String) comboMedi.getSelectedItem();
+                Medicamento medN = (Medicamento) medicamentosMap.get(keyMed);
+
+                newRM.setCreatedAt(new Date());
+                newRM.setIdCita(citaN);
+                newRM.setIdTratamiento(tratN);
+                newRM.setFechaEmision(new Date());
+                newRM.setInstrucciones(instruccTA.getText());
+                cRecetaMedica.create(newRM);
+
+                newRMed.setIdReceta(newRM);
+                newRMed.setIdMedicamento(medN);
+                newRMed.setDosis(dosisField.getText());
+                newRMed.setFrecuencia(frecuenciaField.getText());
+                newRMed.setDuracion(duracionField.getText());
+                newRMed.setCantidad((int) cantidadSpinner.getValue());
+                newRMed.setCreatedAt(new Date());
+                cRecetaMedicamento.create(newRMed);
+
+                recetasMedicamentos = cRecetaMedicamento.findRecetaMedicamentoEntities();
+
+                recetasMedicas = cRecetaMedica.findRecetaMedicaEntities();
+                modeloReceta.actualizar(recetasMedicas);
+                tratamientos.clear();
+                tratamientos = cTratamientos.findTratamientoEntities();
+                actualizarTablas();
+                JOptionPane.showMessageDialog(this, "Receta y Medicamento agregado correctamente", "Informacion importante", JOptionPane.INFORMATION_MESSAGE);
+                limpiarCampos();
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al intentar agregar, verifique de nuevo ó consulte con un experto", "Informacion importante", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_addBotActionPerformed
 
     private void editBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editBotActionPerformed
-        // TODO add your handling code here:
+        int filaSelect = tablaRecetas.getSelectedRow();
+        if (filaSelect == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione y cargue los datos para editar", "Información importante", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int idReceta = (int) tablaRecetas.getValueAt(filaSelect, 3);
+        try {
+            cRecetaMedica = new RecetaMedicaJpaController(admDatos.getEmf());
+            cRecetaMedicamento = new RecetaMedicamentoJpaController(admDatos.getEmf());
+
+            RecetaMedica rm = cRecetaMedica.findRecetaMedica(idReceta);
+
+            if (rm == null) {
+                JOptionPane.showMessageDialog(this, "Receta no encontrada", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            rm.setInstrucciones(instruccTA.getText());
+            cRecetaMedica.edit(rm);
+
+            // Buscar y actualizar medicamento si corresponde
+            boolean tieneMed = siCB.isSelected();
+            List<RecetaMedicamento> lista = cRecetaMedicamento.findRecetaMedicamentoEntities();
+            RecetaMedicamento recMed = null;
+
+            for (RecetaMedicamento r : lista) {
+                if (r.getIdReceta().getIdReceta() == idReceta) {
+                    recMed = r;
+                    break;
+                }
+            }
+
+            if (tieneMed) {
+                String keyMed = (String) comboMedi.getSelectedItem();
+                Medicamento medN = (Medicamento) medicamentosMap.get(keyMed);
+
+                if (recMed != null) {
+                    recMed.setIdMedicamento(medN);
+                    recMed.setDosis(dosisField.getText());
+                    recMed.setFrecuencia(frecuenciaField.getText());
+                    recMed.setDuracion(duracionField.getText());
+                    recMed.setCantidad((int) cantidadSpinner.getValue());
+                    cRecetaMedicamento.edit(recMed);
+                } else {
+                    // No existía antes, se crea nuevo
+                    RecetaMedicamento nuevo = new RecetaMedicamento();
+                    nuevo.setIdReceta(rm);
+                    nuevo.setIdMedicamento(medN);
+                    nuevo.setDosis(dosisField.getText());
+                    nuevo.setFrecuencia(frecuenciaField.getText());
+                    nuevo.setDuracion(duracionField.getText());
+                    nuevo.setCantidad((int) cantidadSpinner.getValue());
+                    nuevo.setCreatedAt(new Date());
+                    cRecetaMedicamento.create(nuevo);
+                }
+
+            } else {
+                // Si no debe tener medicamento pero sí existe, se elimina
+                if (recMed != null) {
+                    cRecetaMedicamento.destroy(recMed.getIdRecetaMedicamento());
+                }
+            }
+
+            JOptionPane.showMessageDialog(this, "Receta actualizada correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            actualizarTablas();
+            limpiarCampos();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al editar la receta: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
     }//GEN-LAST:event_editBotActionPerformed
 
     private void deleteBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBotActionPerformed
-        // TODO add your handling code here:
+        int filaSelect = tablaRecetas.getSelectedRow();
+        if (filaSelect == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione una receta para eliminar", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int idReceta = (int) tablaRecetas.getValueAt(filaSelect, 3);
+        try {
+            cRecetaMedica = new RecetaMedicaJpaController(admDatos.getEmf());
+            cRecetaMedicamento = new RecetaMedicamentoJpaController(admDatos.getEmf());
+
+            // Primero, eliminar medicamento (si existe)
+            List<RecetaMedicamento> lista = cRecetaMedicamento.findRecetaMedicamentoEntities();
+            for (RecetaMedicamento r : lista) {
+                if (r.getIdReceta().getIdReceta() == idReceta) {
+                    cRecetaMedicamento.destroy(r.getIdRecetaMedicamento());
+                    break;
+                }
+            }
+
+            // Luego, eliminar receta médica
+            cRecetaMedica.destroy(idReceta);
+
+            JOptionPane.showMessageDialog(this, "Receta eliminada correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            actualizarTablas();
+            limpiarCampos();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al eliminar la receta: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_deleteBotActionPerformed
 
     private void siCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_siCBActionPerformed
-        // TODO add your handling code here:
+        activarMedicamentos(true);
     }//GEN-LAST:event_siCBActionPerformed
 
     private void noCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_noCBActionPerformed
-        // TODO add your handling code here:
+        activarMedicamentos(false);
     }//GEN-LAST:event_noCBActionPerformed
 
+    private void limpiarCampos() {
+        instruccTA.setText("");
+        dosisField.setText("");
+        frecuenciaField.setText("");
+        duracionField.setText("");
+        cantidadSpinner.setValue(1);
+        pacientefield.setText("");
+        citafield.setText("");
+        comboMedi.setSelectedIndex(0); // si tiene un valor por defecto
+        siCB.setSelected(false);
+    }
+
+    private void activarMedicamentos(boolean act) {
+        siCB.setSelected(act);
+        comboMedi.setEnabled(act);
+        dosisField.setEnabled(act);
+        frecuenciaField.setEnabled(act);
+        duracionField.setEnabled(act);
+        cantidadSpinner.setEnabled(act);
+
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup accionesGrupo;
