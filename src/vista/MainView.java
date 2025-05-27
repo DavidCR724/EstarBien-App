@@ -90,6 +90,7 @@ public class MainView extends javax.swing.JFrame {
         jMenu3 = new javax.swing.JMenu();
         medicamentoItem = new javax.swing.JMenuItem();
         citasItem = new javax.swing.JMenuItem();
+        consultasItem = new javax.swing.JMenuItem();
         notiMenu = new javax.swing.JMenu();
         sesionMenu = new javax.swing.JMenu();
 
@@ -224,6 +225,14 @@ public class MainView extends javax.swing.JFrame {
         });
         jMenu3.add(citasItem);
 
+        consultasItem.setText("Consultas");
+        consultasItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                consultasItemActionPerformed(evt);
+            }
+        });
+        jMenu3.add(consultasItem);
+
         jMenuBar1.add(jMenu3);
 
         notiMenu.setText("Notificaciones");
@@ -314,6 +323,10 @@ public class MainView extends javax.swing.JFrame {
         mostrarPanel("Inicio", new PanelInicio());
     }//GEN-LAST:event_inicioMenuMouseClicked
 
+    private void consultasItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_consultasItemActionPerformed
+       mostrarPanel("Consultas", new PanelConsultas());
+    }//GEN-LAST:event_consultasItemActionPerformed
+
     /**
      * Muestra un panel específico en el contenedor utilizando CardLayout. Si el panel ya existe, simplemente lo muestra. Si no existe, lo añade al contenedor antes de mostrarlo.
      *
@@ -379,12 +392,14 @@ public class MainView extends javax.swing.JFrame {
                 PanelUsuarios panelUsuarios = new PanelUsuarios();
                 PanelInicioSesion panelInicioSesion = new PanelInicioSesion();
                 PanelConfiguracion panelConfiguracion = new PanelConfiguracion();
+                PanelConsultas panelConsultas = new PanelConsultas();
 
                 // Registrar paneles en el hilo de eventos para seguridad en Swing
                 SwingUtilities.invokeLater(() -> {
                     mainView.registrarPanel("Usuarios", panelUsuarios);
                     mainView.registrarPanel("IniciarSesion", panelInicioSesion);
                     mainView.registrarPanel("Configuracion", panelConfiguracion);
+                    mainView.registrarPanel("Consultas", panelConsultas);
                     System.out.println("Paneles precargados y registrados.");
                 });
             }).start();
@@ -432,6 +447,7 @@ public class MainView extends javax.swing.JFrame {
                 invenItem.setVisible(true);
                 ExpedienteItem.setVisible(true);
                 Recetas.setVisible(true);
+                consultasItem.setVisible(true);
                 break;
 
             case "medico":
@@ -443,6 +459,7 @@ public class MainView extends javax.swing.JFrame {
                 tratamientoItem.setVisible(true);
                 ExpedienteItem.setVisible(true);
                 Recetas.setVisible(true);
+                consultasItem.setVisible(true);
                 break;
 
             case "paciente":
@@ -472,7 +489,7 @@ public class MainView extends javax.swing.JFrame {
         invenItem.setVisible(false);
         ExpedienteItem.setVisible(false);
         Recetas.setVisible(false);
-
+        consultasItem.setVisible(false);
         // Solo visibles por defecto
         inicioMenu.setVisible(true);
         sesionMenu.setVisible(true);
@@ -485,6 +502,7 @@ public class MainView extends javax.swing.JFrame {
     private javax.swing.JMenu adminMenu;
     private javax.swing.JMenuItem citasItem;
     private javax.swing.JMenu configMenu;
+    private javax.swing.JMenuItem consultasItem;
     private javax.swing.JMenuItem facturasItem;
     private javax.swing.JMenu inicioMenu;
     private javax.swing.JMenuItem invenItem;
