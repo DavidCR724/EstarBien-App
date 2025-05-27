@@ -13,7 +13,7 @@ import javax.swing.table.AbstractTableModel;
  */
 public class ModTabPacienteCita extends AbstractTableModel {
     private List<Paciente> pacientes;
-    private final String[] encabezados = {"Nombre del paciente"};
+    private final String[] encabezados = {"Nombre del paciente","No. paciente"};
             
     public ModTabPacienteCita(List<Paciente> pacientes) {
         this.pacientes = pacientes;
@@ -42,9 +42,9 @@ public class ModTabPacienteCita extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case 0:
-                return pacientes.get(rowIndex).getNombre()+ " " + pacientes.get(rowIndex).getApellidoPaterno();
+                return pacientes.get(rowIndex).getNombre()+ " " + pacientes.get(rowIndex).getApellidoPaterno()+ " " + pacientes.get(rowIndex).getApellidoMaterno();
             default:
-                return null;
+                return pacientes.get(rowIndex).getIdPaciente();
         }
 
     }

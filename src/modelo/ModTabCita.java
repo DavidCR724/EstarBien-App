@@ -42,7 +42,7 @@ public class ModTabCita extends AbstractTableModel {
         CitaMedica cita = citas.get(rowIndex);
         switch (columnIndex) {
             case 0: return cita.getIdCita();
-            case 1: return cita.getIdPaciente().getNombre(); // Asume que Paciente tiene este método
+            case 1: return cita.getIdPaciente().getNombre() + " " +cita.getIdPaciente().getApellidoPaterno(); // Asume que Paciente tiene este método
             case 2: return timeFormat.format(cita.getHora());
             case 3: return cita.getMotivo();
             case 4: return cita.getEstatus();
@@ -50,8 +50,8 @@ public class ModTabCita extends AbstractTableModel {
         }
     }
 
-    public void setCitas(List<CitaMedica> citas) {
-        this.citas = citas != null ? citas : new ArrayList<>();
+    public void actualizar(List<CitaMedica> citas) {
+        this.citas = citas;
         fireTableDataChanged();
     }
 }
