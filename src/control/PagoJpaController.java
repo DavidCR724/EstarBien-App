@@ -215,6 +215,19 @@ public class PagoJpaController implements Serializable {
         return findPagoEntities(true, -1, -1);
     }
 
+    //Encontrar un pago por paciente, usado para las facturas
+    public List<Pago> findPagosByPaciente(Paciente paciente) {
+    EntityManager em = getEntityManager();
+    try {
+        Query q = em.createQuery(
+            "SELECT p FROM Pago p WHERE p.idCita.idPaciente = :paciente", Pago.class)
+            .setParameter("paciente", paciente);
+        return q.getResultList();
+    } finally {
+        em.close();
+    }
+}
+    
     public List<Pago> findPagoEntities(int maxResults, int firstResult) {
         return findPagoEntities(false, maxResults, firstResult);
     }

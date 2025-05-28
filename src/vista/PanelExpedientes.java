@@ -27,7 +27,7 @@ import modelo.Paciente;
 public class PanelExpedientes extends javax.swing.JPanel {
 
     private AdmDatos admDatos = new AdmDatos();
-    private ExpedienteMedicoJpaController cExpedientes;
+    private ExpedienteMedicoJpaController cExpedientes; 
     private List<ExpedienteMedico> expedientes;
     private ModTabExpediente modelo;
     private ModComboPaciente modeloCombo;
