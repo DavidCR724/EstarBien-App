@@ -12,14 +12,10 @@ import control.PacienteJpaController;
 import java.awt.event.ItemEvent;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -135,6 +131,7 @@ public class PanelCitas extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        accioneaButGroup = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
         angedarBot = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
@@ -164,6 +161,9 @@ public class PanelCitas extends javax.swing.JPanel {
         motivoField = new javax.swing.JTextField();
         eliminarBot = new javax.swing.JButton();
         cargarBot = new javax.swing.JButton();
+        eliminarCB = new javax.swing.JCheckBox();
+        agendarCB = new javax.swing.JCheckBox();
+        editCB = new javax.swing.JCheckBox();
 
         setMaximumSize(new java.awt.Dimension(1397, 882));
         setMinimumSize(new java.awt.Dimension(1397, 882));
@@ -174,6 +174,7 @@ public class PanelCitas extends javax.swing.JPanel {
 
         angedarBot.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         angedarBot.setText("Agendar Cita");
+        angedarBot.setEnabled(false);
         angedarBot.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 angedarBotActionPerformed(evt);
@@ -211,6 +212,7 @@ public class PanelCitas extends javax.swing.JPanel {
 
         editarBot.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         editarBot.setText("Editar Cita");
+        editarBot.setEnabled(false);
         editarBot.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editarBotActionPerformed(evt);
@@ -273,6 +275,7 @@ public class PanelCitas extends javax.swing.JPanel {
 
         eliminarBot.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         eliminarBot.setText("Eliminar Cita");
+        eliminarBot.setEnabled(false);
         eliminarBot.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 eliminarBotActionPerformed(evt);
@@ -287,6 +290,27 @@ public class PanelCitas extends javax.swing.JPanel {
             }
         });
 
+        accioneaButGroup.add(eliminarCB);
+        eliminarCB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eliminarCBActionPerformed(evt);
+            }
+        });
+
+        accioneaButGroup.add(agendarCB);
+        agendarCB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                agendarCBActionPerformed(evt);
+            }
+        });
+
+        accioneaButGroup.add(editCB);
+        editCB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editCBActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -294,6 +318,24 @@ public class PanelCitas extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jmedicos, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(nomMedLab, javax.swing.GroupLayout.PREFERRED_SIZE, 419, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 656, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cargarBot))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel13)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(todasCitasBot)
+                                .addContainerGap())
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 729, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -307,14 +349,6 @@ public class PanelCitas extends javax.swing.JPanel {
                                 .addComponent(buscarPacBot))
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(editarBot, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(angedarBot, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(eliminarBot)
-                                .addGap(220, 220, 220))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
                                 .addComponent(calendario, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -332,27 +366,28 @@ public class PanelCitas extends javax.swing.JPanel {
                                     .addComponent(jLabel2)
                                     .addComponent(jLabel5)
                                     .addComponent(motivoField))
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jmedicos, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(nomMedLab, javax.swing.GroupLayout.PREFERRED_SIZE, 419, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 656, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(cargarBot))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel13)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(todasCitasBot)
                                 .addContainerGap())
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 729, Short.MAX_VALUE)))))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(editarBot, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(editCB)
+                                        .addGap(47, 47, 47)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(angedarBot, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(eliminarBot)
+                                        .addGap(220, 220, 220))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addGap(64, 64, 64)
+                                        .addComponent(agendarCB)
+                                        .addGap(92, 92, 92)
+                                        .addComponent(eliminarCB)
+                                        .addContainerGap())))))))
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -373,10 +408,21 @@ public class PanelCitas extends javax.swing.JPanel {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(16, 16, 16)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(editarBot)
-                        .addComponent(angedarBot)
-                        .addComponent(eliminarBot))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(editarBot)
+                            .addComponent(angedarBot)
+                            .addComponent(eliminarBot))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(editCB)
+                                .addGap(2, 2, 2))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(eliminarCB, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(agendarCB, javax.swing.GroupLayout.Alignment.TRAILING)))))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
@@ -507,6 +553,10 @@ public class PanelCitas extends javax.swing.JPanel {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al agendar cita: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+        editarBot.setEnabled(false);
+        angedarBot.setEnabled(false);
+        eliminarBot.setEnabled(false);
+        agendarCB.setSelected(false);
     }//GEN-LAST:event_angedarBotActionPerformed
 
     private void jmedicosItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jmedicosItemStateChanged
@@ -625,6 +675,10 @@ public class PanelCitas extends javax.swing.JPanel {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al eliminar cita: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+        editarBot.setEnabled(false);
+        angedarBot.setEnabled(false);
+        eliminarBot.setEnabled(false);
+        eliminarCB.setSelected(false);
     }//GEN-LAST:event_eliminarBotActionPerformed
 
     private void editarBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarBotActionPerformed
@@ -671,6 +725,8 @@ public class PanelCitas extends javax.swing.JPanel {
             // Asignar a la cita (dependiendo de cómo esté definido tu modelo)
             citaSeleccionada.setFecha(fechaSQL);  // Solo la fecha
             citaSeleccionada.setHora(horaSQL);    // Solo la hora
+            
+            citaSeleccionada.setMotivo(motivoField.getText());
 
             // Actualizar médico si cambió
             String keyNom = (String) jmedicos.getSelectedItem();
@@ -707,6 +763,10 @@ public class PanelCitas extends javax.swing.JPanel {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al editar cita: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+        editarBot.setEnabled(false);
+        angedarBot.setEnabled(false);
+        eliminarBot.setEnabled(false);
+        editCB.setSelected(false);
     }//GEN-LAST:event_editarBotActionPerformed
 
     private void cargarBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarBotActionPerformed
@@ -739,15 +799,9 @@ public class PanelCitas extends javax.swing.JPanel {
             String nombreMedico = medico.getNombre() + " " + medico.getApellidoPaterno() + " " + medico.getApellidoMaterno();
             jmedicos.setSelectedItem(nombreMedico);
 
-            // Configurar horas - Versión más robusta
-            if (citaSeleccionada.getHora() != null) {
-                LocalTime hora = citaSeleccionada.getFecha().toInstant()
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalTime();
-                horaInicioField.setText(hora.format(DateTimeFormatter.ofPattern("HH:mm")));
-            } else {
-                horaInicioField.setText("");
-            }
+            // Configurar horas
+            LocalTime horadisp = convertirDateALocalTime(citaSeleccionada.getHora());
+            horaInicioField.setText(horadisp.format(DateTimeFormatter.ofPattern("HH:mm")));
 
             // Configurar otros campos con validación de nulos
             motivoField.setText(citaSeleccionada.getMotivo() != null ? citaSeleccionada.getMotivo() : "");
@@ -773,7 +827,30 @@ public class PanelCitas extends javax.swing.JPanel {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al cargar cita: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+        
+        editarBot.setEnabled(false);
+        angedarBot.setEnabled(false);
+        eliminarBot.setEnabled(false);
     }//GEN-LAST:event_cargarBotActionPerformed
+
+    private void editCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCBActionPerformed
+        editarBot.setEnabled(true);
+        angedarBot.setEnabled(false);
+        eliminarBot.setEnabled(false);
+        
+    }//GEN-LAST:event_editCBActionPerformed
+
+    private void agendarCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agendarCBActionPerformed
+        editarBot.setEnabled(false);
+        angedarBot.setEnabled(true);
+        eliminarBot.setEnabled(false);
+    }//GEN-LAST:event_agendarCBActionPerformed
+
+    private void eliminarCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarCBActionPerformed
+        editarBot.setEnabled(false);
+        angedarBot.setEnabled(false);
+        eliminarBot.setEnabled(true);
+    }//GEN-LAST:event_eliminarCBActionPerformed
 
     private boolean esHoraValida(String hora) {
         return hora.matches("([01]\\d|2[0-3]):[0-5]\\d");
@@ -959,14 +1036,18 @@ public class PanelCitas extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup accioneaButGroup;
+    private javax.swing.JCheckBox agendarCB;
     private javax.swing.JButton angedarBot;
     private javax.swing.JTextField bucarPacField;
     private javax.swing.JButton buscarPacBot;
     private com.toedter.calendar.JCalendar calendario;
     private javax.swing.JButton cargarBot;
     private javax.swing.JComboBox<String> comboEstado;
+    private javax.swing.JCheckBox editCB;
     private javax.swing.JButton editarBot;
     private javax.swing.JButton eliminarBot;
+    private javax.swing.JCheckBox eliminarCB;
     private javax.swing.JTextField horaFinField;
     private javax.swing.JLabel horaInicio;
     private javax.swing.JTextField horaInicioField;

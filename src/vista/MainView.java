@@ -64,6 +64,8 @@ public class MainView extends javax.swing.JFrame {
 //        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         mostrarPanel("Configuracion", panelConf);
         mostrarPanel("Inicio", new PanelInicio());
+        this.setLocationRelativeTo(null);
+        
     }
 
     /**

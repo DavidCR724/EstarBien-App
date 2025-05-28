@@ -4,17 +4,107 @@
  */
 package vista;
 
+import control.AdmDatos;
+import control.CitaMedicaJpaController;
+import control.ConsultaDiagnosticoJpaController;
+import control.ConsultaJpaController;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.swing.JOptionPane;
+import modelo.CitaMedica;
+import modelo.Consulta;
+import modelo.ConsultaDiagnostico;
+import modelo.ModTabConsulta;
+import modelo.ModTabConsultaDiag;
+
 /**
  *
  * @author carlo
  */
 public class PanelConsultas extends javax.swing.JPanel {
 
+    private AdmDatos admDatos;
+
+    private ConsultaJpaController cConsulta;
+    private CitaMedicaJpaController cCita;
+    private ConsultaDiagnosticoJpaController cConsultaDiag;
+
+    private List<Consulta> consultas;
+    private List<CitaMedica> citas;
+    private List<ConsultaDiagnostico> consultasDiag;
+
+    private HashMap<String, CitaMedica> citasHash;
+
+    private ModTabConsulta modelConsulta;
+    private ModTabConsultaDiag modeloConsultaDiag;
+
+    private Consulta consultaCargada = null;
+
     /**
      * Creates new form PanelConsultas
      */
     public PanelConsultas() {
         initComponents();
+        //CONSULTAS
+        admDatos = new AdmDatos();
+        cConsulta = new ConsultaJpaController(admDatos.getEmf());
+        consultas = cConsulta.findConsultaEntities();
+        //CITAS
+        cCita = new CitaMedicaJpaController(admDatos.getEmf());
+        citas = cCita.findCitaMedicaEntities();
+        citasHash = new HashMap<>();
+        //CONSULTA DIAGNOSTICO
+        cConsultaDiag = new ConsultaDiagnosticoJpaController(admDatos.getEmf());
+        consultasDiag = cConsultaDiag.findConsultaDiagnosticoEntities();
+        modeloConsultaDiag = new ModTabConsultaDiag(new ArrayList<>());
+        tablaConsDiag.setModel(modeloConsultaDiag);
+
+        cargarConsultas();
+        cargarCitas();
+    }
+
+    private void cargarConsultas() {
+
+        modelConsulta = new ModTabConsulta(consultas);
+        consultas.sort(Comparator.comparing(Consulta::getIdConsulta));
+        tablaCons.setModel(modelConsulta);
+
+    }
+
+    private void cargarConsultasDiagnostico() {
+        modeloConsultaDiag = new ModTabConsultaDiag(consultasDiag);
+        tablaConsDiag.setModel(modeloConsultaDiag);
+    }
+
+    private void cargarCitas() {
+        comboCita.removeAllItems();
+        citasHash.clear();
+
+        // Obtener todas las citas y consultas
+        citas = cCita.findCitaMedicaEntities();
+        consultas = cConsulta.findConsultaEntities();
+
+        // Crear lista de IDs de citas que ya tienen consulta
+        List<Integer> citasConConsulta = consultas.stream()
+                .map(consulta -> consulta.getIdCita().getIdCita())
+                .collect(Collectors.toList());
+
+        // Filtrar citas que no están en la lista de citas con consulta
+        citas.stream()
+                .filter(cita -> !citasConConsulta.contains(cita.getIdCita()))
+                .forEach(cita -> {
+                    String key = "Cita " + cita.getIdCita() + " > "
+                            + cita.getIdPaciente().getNombre() + " "
+                            + cita.getIdPaciente().getApellidoPaterno() + " "
+                            + cita.getIdPaciente().getApellidoMaterno();
+                    comboCita.addItem(key);
+                    citasHash.put(key, cita);
+                });
     }
 
     /**
@@ -24,30 +114,830 @@ public class PanelConsultas extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        jLabel2 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaCons = new javax.swing.JTable();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tablaConsDiag = new javax.swing.JTable();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        pacienteField = new javax.swing.JTextField();
+        medicoField = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        comboCita = new javax.swing.JComboBox<>();
+        jLabel8 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        sintomasArea = new javax.swing.JTextArea();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        observaArea = new javax.swing.JTextArea();
+        jLabel9 = new javax.swing.JLabel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        detallesArea = new javax.swing.JTextArea();
+        jLabel15 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        codigoCIEField = new javax.swing.JTextField();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        diagnosticoArea = new javax.swing.JTextArea();
+        tipoDiagField = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        pesoSpinner = new javax.swing.JSpinner();
+        alturaSpinner = new javax.swing.JSpinner();
+        presionArt = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        frecCardField = new javax.swing.JTextField();
+        tempField = new javax.swing.JTextField();
+        jPanel3 = new javax.swing.JPanel();
+        cargarBot = new javax.swing.JButton();
+        guardadCB = new javax.swing.JCheckBox();
+        agregarBot = new javax.swing.JButton();
+        editarCB = new javax.swing.JCheckBox();
+        editarBot = new javax.swing.JButton();
+        eliminarCB = new javax.swing.JCheckBox();
+        eliminarBot = new javax.swing.JButton();
 
-        jLabel1.setText("HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        setMaximumSize(new java.awt.Dimension(1397, 882));
+        setMinimumSize(new java.awt.Dimension(1397, 882));
+        setPreferredSize(new java.awt.Dimension(1397, 882));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jLabel2.setText("Consulta");
+
+        tablaCons.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tablaCons.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaConsMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tablaCons);
+
+        tablaConsDiag.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tablaConsDiag.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaConsDiagMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tablaConsDiag);
+
+        jLabel5.setText("Paciente");
+
+        jLabel6.setText("Medico");
+
+        pacienteField.setEditable(false);
+
+        medicoField.setEditable(false);
+
+        jLabel7.setText("Cita");
+
+        comboCita.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboCitaActionPerformed(evt);
+            }
+        });
+
+        jLabel8.setText("Sintomas");
+
+        sintomasArea.setColumns(20);
+        sintomasArea.setRows(5);
+        jScrollPane4.setViewportView(sintomasArea);
+
+        observaArea.setColumns(20);
+        observaArea.setRows(5);
+        jScrollPane5.setViewportView(observaArea);
+
+        jLabel9.setText("Observaciones");
+
+        detallesArea.setEditable(false);
+        detallesArea.setColumns(20);
+        detallesArea.setRows(5);
+        jScrollPane6.setViewportView(detallesArea);
+
+        jLabel15.setText("Detalles Consulta y Diagnostico");
+
+        jLabel4.setText("Codigo CIE");
+
+        diagnosticoArea.setColumns(20);
+        diagnosticoArea.setRows(5);
+        jScrollPane3.setViewportView(diagnosticoArea);
+
+        tipoDiagField.setText("tipo: presuntivo");
+
+        jLabel1.setText("Tipo:");
+
+        jLabel3.setText("Diagnostico");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel3)
+                        .addComponent(jLabel1)))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(tipoDiagField, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(codigoCIEField, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(codigoCIEField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tipoDiagField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
+
+        pesoSpinner.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(5.0f), Float.valueOf(5.0f), Float.valueOf(250.0f), Float.valueOf(1.0f)));
+
+        alturaSpinner.setModel(new javax.swing.SpinnerNumberModel(0.3d, 0.3d, 3.0d, 0.01d));
+
+        jLabel10.setText("Presion Arterial");
+
+        jLabel11.setText("Temperatura");
+
+        jLabel12.setText("Frecuencia Cardiaca");
+
+        jLabel13.setText("Peso");
+
+        jLabel14.setText("Altura");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(45, 45, 45)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(presionArt)
+                    .addComponent(frecCardField)
+                    .addComponent(tempField)
+                    .addComponent(pesoSpinner)
+                    .addComponent(alturaSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(presionArt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel12)
+                    .addComponent(frecCardField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(tempField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(pesoSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel14)
+                    .addComponent(alturaSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        cargarBot.setText("Cargar Consulta");
+        cargarBot.setEnabled(false);
+        cargarBot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cargarBotActionPerformed(evt);
+            }
+        });
+
+        buttonGroup1.add(guardadCB);
+        guardadCB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                guardadCBActionPerformed(evt);
+            }
+        });
+
+        agregarBot.setText("Guardar Consulta");
+        agregarBot.setEnabled(false);
+        agregarBot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                agregarBotActionPerformed(evt);
+            }
+        });
+
+        buttonGroup1.add(editarCB);
+        editarCB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editarCBActionPerformed(evt);
+            }
+        });
+
+        editarBot.setText("Editar Consulta");
+        editarBot.setEnabled(false);
+        editarBot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editarBotActionPerformed(evt);
+            }
+        });
+
+        buttonGroup1.add(eliminarCB);
+        eliminarCB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eliminarCBActionPerformed(evt);
+            }
+        });
+
+        eliminarBot.setText("Eliminar Consulta");
+        eliminarBot.setEnabled(false);
+        eliminarBot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eliminarBotActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(cargarBot)
+                .addGap(24, 24, 24)
+                .addComponent(guardadCB)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(agregarBot)
+                .addGap(18, 18, 18)
+                .addComponent(editarCB)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(editarBot)
+                .addGap(18, 18, 18)
+                .addComponent(eliminarCB)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(eliminarBot)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(guardadCB)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cargarBot)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(agregarBot)
+                                .addComponent(editarCB))))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(editarBot)
+                        .addComponent(eliminarCB))
+                    .addComponent(eliminarBot))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(310, 310, 310)
-                .addComponent(jLabel1)
-                .addContainerGap(176, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 653, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane2)
+                        .addGap(8, 8, 8))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(17, 17, 17)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel5))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
+                            .addComponent(pacienteField, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(comboCita, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(medicoField)
+                            .addComponent(jScrollPane5))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(153, 153, 153)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel15)
+                            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 67, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(267, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(158, 158, 158))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGap(42, 42, 42)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(pacienteField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(medicoField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6))
+                        .addGap(22, 22, 22)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(comboCita, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7))
+                        .addGap(36, 36, 36)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel8)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel9)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel15)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane6))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(86, 197, Short.MAX_VALUE))))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void tablaConsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaConsMouseClicked
+        int filaSel = tablaCons.getSelectedRow();
+        if (filaSel != -1) {
+            int idAp = (int) tablaCons.getValueAt(filaSel, 0);
+            Consulta cApoyo = cConsulta.findConsulta(idAp);
+            detallesArea.setText(
+                    "Paciente: " + tablaCons.getValueAt(filaSel, 1) + "\n"
+                    + "Medico: " + tablaCons.getValueAt(filaSel, 2) + "\n"
+                    + "Sintomas: " + tablaCons.getValueAt(filaSel, 3) + "\n"
+                    + "Observaciones: " + cApoyo.getObservaciones() + "\n"
+                    + "Presion Arterial: " + cApoyo.getPresionArterial() + "\n"
+                    + "Temperatura: " + cApoyo.getTemperatura() + "\n"
+                    + "Frec. Cardiaca: " + cApoyo.getFrecuenciaCardiaca() + "\n"
+                    + "Peso: " + cApoyo.getPeso() + " Kg\n"
+                    + "Estatura: " + cApoyo.getEstatura() + " m"
+            );
+            pacienteField.setText((String) tablaCons.getValueAt(filaSel, 1));
+            medicoField.setText((String) tablaCons.getValueAt(filaSel, 2));
+
+            List<ConsultaDiagnostico> consDiagAux = consultasDiag.stream()
+                    .filter(cd -> cd.getIdConsulta() != null && cd.getIdConsulta().getIdConsulta() == cApoyo.getIdConsulta())
+                    .collect(Collectors.toList());
+
+            modeloConsultaDiag.actualizar(consDiagAux);
+            tablaConsDiag.setModel(modeloConsultaDiag);
+        }
+        cargarBot.setEnabled(true);
+    }//GEN-LAST:event_tablaConsMouseClicked
+
+    private void comboCitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboCitaActionPerformed
+        String llave = (String) comboCita.getSelectedItem();
+        if (citasHash.get(llave) != null) {
+            // Actualizar campo del paciente
+            if (citasHash.get(llave).getIdPaciente() != null) {
+                pacienteField.setText(
+                        citasHash.get(llave).getIdPaciente().getNombre() + " "
+                        + citasHash.get(llave).getIdPaciente().getApellidoPaterno() + " "
+                        + citasHash.get(llave).getIdPaciente().getApellidoMaterno()
+                );
+            } else {
+                pacienteField.setText(""); // Limpiar si no hay paciente
+            }
+
+            // Actualizar campo del médico
+            if (citasHash.get(llave).getIdMedico() != null) {
+                medicoField.setText(
+                        citasHash.get(llave).getIdMedico().getNombre() + " "
+                        + citasHash.get(llave).getIdMedico().getApellidoPaterno() + " "
+                        + citasHash.get(llave).getIdMedico().getApellidoMaterno()
+                );
+            } else {
+                medicoField.setText(""); // Limpiar si no hay médico
+            }
+        } else {
+            // Si no hay cita seleccionada, limpiar campos
+            pacienteField.setText("");
+            medicoField.setText("");
+        }
+    }//GEN-LAST:event_comboCitaActionPerformed
+
+    private void tablaConsDiagMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaConsDiagMouseClicked
+        int filaSel = tablaCons.getSelectedRow();
+        if (filaSel != -1) {
+            int idAp = (int) tablaCons.getValueAt(filaSel, 0);
+            ConsultaDiagnostico cApoyo = cConsultaDiag.findConsultaDiagnostico(idAp);
+            detallesArea.setText(
+                    "Paciente: " + cApoyo.getIdConsulta().getIdPaciente().getNombre() + " " + cApoyo.getIdConsulta().getIdPaciente().getApellidoPaterno() + " " + cApoyo.getIdConsulta().getIdPaciente().getApellidoMaterno() + "\n"
+                    + "Medico: " + cApoyo.getIdConsulta().getIdMedico().getNombre() + " " + cApoyo.getIdConsulta().getIdMedico().getApellidoPaterno() + " " + cApoyo.getIdConsulta().getIdMedico().getApellidoMaterno() + "\n"
+                    + "Sintomas: " + cApoyo.getIdConsulta().getSintomas() + "\n"
+                    + "Observaciones: " + cApoyo.getIdConsulta().getObservaciones() + "\n"
+                    + "Presion Arterial: " + cApoyo.getIdConsulta().getPresionArterial() + "\n"
+                    + "Temperatura: " + cApoyo.getIdConsulta().getTemperatura() + "\n"
+                    + "Frec. Cardiaca: " + cApoyo.getIdConsulta().getFrecuenciaCardiaca() + "\n"
+                    + "Peso: " + cApoyo.getIdConsulta().getPeso() + " Kg\n"
+                    + "Estatura: " + cApoyo.getIdConsulta().getEstatura() + " m" + "\n"
+                    + "----------------------------------------------------------------" + "\n"
+                    + "Codigo CIE: " + cApoyo.getCodigoCie() + "\n"
+                    + "Diagnostico: " + cApoyo.getDiagnostico() + "\n"
+                    + "Tipo Diag: " + cApoyo.getTipo() + "\n"
+                    + "----------------------------------------------------------------"
+            );
+
+        }
+        cargarBot.setEnabled(true);
+    }//GEN-LAST:event_tablaConsDiagMouseClicked
+
+    private void cargarBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarBotActionPerformed
+        int filaSel = tablaCons.getSelectedRow();
+        if (filaSel != -1) {
+            int idConsulta = (int) tablaCons.getValueAt(filaSel, 0);
+            consultaCargada = cConsulta.findConsulta(idConsulta);
+            if (consultaCargada != null) {
+                sintomasArea.setText(consultaCargada.getSintomas());
+                presionArt.setText(consultaCargada.getPresionArterial());
+                tempField.setText(consultaCargada.getTemperatura().toString());
+                frecCardField.setText(consultaCargada.getFrecuenciaCardiaca().toString());
+                pesoSpinner.setValue(consultaCargada.getPeso());
+                alturaSpinner.setValue(consultaCargada.getEstatura());
+                observaArea.setText(consultaCargada.getObservaciones());
+                diagnosticoArea.setText(""); // podrías agregarlo desde Diagnóstico
+
+                // Mostrar datos de Diagnóstico si existe
+                List<ConsultaDiagnostico> diag = consultasDiag.stream()
+                        .filter(cd -> cd.getIdConsulta().getIdConsulta() == idConsulta)
+                        .collect(Collectors.toList());
+
+                if (!diag.isEmpty()) {
+                    ConsultaDiagnostico d = diag.get(0); // suponiendo 1 principal
+                    codigoCIEField.setText(d.getCodigoCie());
+                    tipoDiagField.setText(d.getTipo());
+                    diagnosticoArea.setText(d.getDiagnostico());
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecciona una consulta para cargar.", "Aviso", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_cargarBotActionPerformed
+
+    private void agregarBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarBotActionPerformed
+        String sintomas = sintomasArea.getText().trim();
+        String presion = presionArt.getText().trim();
+        String temperaturaStr = tempField.getText().trim();
+        String frecuenciaStr = frecCardField.getText().trim();
+        Object pesoVal = pesoSpinner.getValue();
+        Object estaturaVal = alturaSpinner.getValue();
+
+        String observacionStr = observaArea.getText().trim();
+        double peso = pesoVal instanceof BigDecimal
+                ? ((BigDecimal) pesoVal).doubleValue()
+                : ((Number) pesoVal).doubleValue();
+
+        double estatura = estaturaVal instanceof BigDecimal
+                ? ((BigDecimal) estaturaVal).doubleValue()
+                : ((Number) estaturaVal).doubleValue();
+
+        if (comboCita.getSelectedItem() == null || sintomas.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Cita y síntomas son obligatorios.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            BigDecimal temperatura = new BigDecimal(temperaturaStr);
+            int frecuencia = Integer.parseInt(frecuenciaStr);
+            CitaMedica cita = citasHash.get((String) comboCita.getSelectedItem());
+
+            Consulta nueva = new Consulta();
+            nueva.setIdCita(cita);
+            nueva.setIdPaciente(cita.getIdPaciente());
+            nueva.setIdMedico(cita.getIdMedico());
+            nueva.setSintomas(sintomas);
+            nueva.setObservaciones(observacionStr);
+            nueva.setPresionArterial(presion);
+            nueva.setTemperatura(temperatura);
+            nueva.setFrecuenciaCardiaca(frecuencia);
+            nueva.setPeso(BigDecimal.valueOf(peso));
+            nueva.setEstatura(BigDecimal.valueOf(estatura));
+
+            cConsulta.create(nueva);
+
+            // Insertar diagnóstico si hay
+            if (!diagnosticoArea.getText().trim().isEmpty()) {
+                ConsultaDiagnostico diag = new ConsultaDiagnostico();
+                diag.setIdConsulta(nueva);
+                diag.setCodigoCie(codigoCIEField.getText().trim());
+                diag.setDiagnostico(diagnosticoArea.getText().trim());
+                diag.setTipo(tipoDiagField.getText().trim());
+                cConsultaDiag.create(diag);
+            }
+
+            JOptionPane.showMessageDialog(this, "Consulta agregada correctamente.");
+            consultas = cConsulta.findConsultaEntities();
+            consultasDiag = cConsultaDiag.findConsultaDiagnosticoEntities();
+
+            cargarConsultas();
+            cargarConsultasDiagnostico();
+            limpiarCampos();
+            cargarCitas();
+            agregarBot.setEnabled(false);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al agregar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_agregarBotActionPerformed
+
+    private void editarBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarBotActionPerformed
+        if (consultaCargada == null) {
+            JOptionPane.showMessageDialog(this, "Carga una consulta antes de editar.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            Object pesoVal = pesoSpinner.getValue();
+            Object estaturaVal = alturaSpinner.getValue();
+
+            double peso = pesoVal instanceof BigDecimal
+                    ? ((BigDecimal) pesoVal).doubleValue()
+                    : ((Number) pesoVal).doubleValue();
+
+            double estatura = estaturaVal instanceof BigDecimal
+                    ? ((BigDecimal) estaturaVal).doubleValue()
+                    : ((Number) estaturaVal).doubleValue();
+
+            consultaCargada.setSintomas(sintomasArea.getText().trim());
+            consultaCargada.setPresionArterial(presionArt.getText().trim());
+            consultaCargada.setTemperatura(new BigDecimal(tempField.getText().trim()));
+            consultaCargada.setFrecuenciaCardiaca(Integer.parseInt(frecCardField.getText().trim()));
+            consultaCargada.setObservaciones(observaArea.getText().trim());
+            consultaCargada.setPeso(BigDecimal.valueOf(peso));
+            consultaCargada.setEstatura(BigDecimal.valueOf(estatura));
+
+            cConsulta.edit(consultaCargada);
+
+            // Actualizar diagnóstico
+            List<ConsultaDiagnostico> relacionados = consultasDiag.stream()
+                    .filter(cd -> cd.getIdConsulta().getIdConsulta().equals(consultaCargada.getIdConsulta()))
+                    .collect(Collectors.toList());
+
+            ConsultaDiagnostico diag;
+            if (relacionados.isEmpty()) {
+                diag = new ConsultaDiagnostico();
+                diag.setIdConsulta(consultaCargada);
+                diag.setCreatedAt(new Date());
+            } else {
+                diag = relacionados.get(0); // solo uno para simplificar
+            }
+
+            diag.setCodigoCie(codigoCIEField.getText().trim());
+            diag.setDiagnostico(diagnosticoArea.getText().trim());
+            diag.setTipo(tipoDiagField.getText().trim());
+
+            if (diag.getIdConsultaDiagnostico() == null) {
+                cConsultaDiag.create(diag);
+            } else {
+                cConsultaDiag.edit(diag);
+            }
+
+            JOptionPane.showMessageDialog(this, "Consulta editada correctamente.");
+            consultas = cConsulta.findConsultaEntities();
+            consultasDiag = cConsultaDiag.findConsultaDiagnosticoEntities();
+            cargarConsultasDiagnostico();
+            cargarConsultas();
+            limpiarCampos();
+            editarBot.setEnabled(false);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al editar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+    }//GEN-LAST:event_editarBotActionPerformed
+
+    private void eliminarBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarBotActionPerformed
+        int filaSel = tablaCons.getSelectedRow();
+        if (filaSel == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona una consulta para eliminar.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int idConsulta = (int) tablaCons.getValueAt(filaSel, 0);
+        Consulta consultaAEliminar = cConsulta.findConsulta(idConsulta);
+
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "¿Deseas eliminar esta consulta y todos sus diagnósticos asociados?",
+                "Confirmar",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            try {
+                // Primero eliminar todos los diagnósticos asociados
+                List<ConsultaDiagnostico> diagnosticos = consultasDiag.stream()
+                        .filter(cd -> cd.getIdConsulta() != null
+                        && cd.getIdConsulta().getIdConsulta() == idConsulta)
+                        .collect(Collectors.toList());
+
+                for (ConsultaDiagnostico diagnostico : diagnosticos) {
+                    try {
+                        cConsultaDiag.destroy(diagnostico.getIdConsultaDiagnostico());
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(
+                                this,
+                                "Error al eliminar diagnóstico: " + e.getMessage(),
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+                        return;
+                    }
+                }
+
+                // Luego eliminar la consulta
+                cConsulta.destroy(idConsulta);
+
+                // Actualizar datos
+                consultas = cConsulta.findConsultaEntities();
+                consultasDiag = cConsultaDiag.findConsultaDiagnosticoEntities();
+
+                cargarConsultas();
+                modeloConsultaDiag.actualizar(new ArrayList<>());
+                tablaConsDiag.setModel(modeloConsultaDiag);
+                cargarCitas();
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Consulta y diagnósticos asociados eliminados correctamente.",
+                        "Éxito",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+
+                eliminarBot.setEnabled(false);
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Error al eliminar: " + e.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                );
+            }
+        }
+    }//GEN-LAST:event_eliminarBotActionPerformed
+
+    private void guardadCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardadCBActionPerformed
+        agregarBot.setEnabled(true);
+        editarBot.setEnabled(false);
+        eliminarBot.setEnabled(false);
+
+    }//GEN-LAST:event_guardadCBActionPerformed
+
+    private void editarCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarCBActionPerformed
+        agregarBot.setEnabled(false);
+        editarBot.setEnabled(true);
+        eliminarBot.setEnabled(false);
+    }//GEN-LAST:event_editarCBActionPerformed
+
+    private void eliminarCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarCBActionPerformed
+        agregarBot.setEnabled(false);
+        editarBot.setEnabled(false);
+        eliminarBot.setEnabled(true);
+    }//GEN-LAST:event_eliminarCBActionPerformed
+    private void limpiarCampos() {
+        sintomasArea.setText("");
+        presionArt.setText("");
+        tempField.setText("");
+        frecCardField.setText("");
+        diagnosticoArea.setText("");
+        codigoCIEField.setText("");
+        tipoDiagField.setText("");
+        observaArea.setText("");
+        comboCita.setSelectedIndex(0);
+
+        // Reinicia los spinners a 0.0
+        pesoSpinner.setValue(5.0);
+        alturaSpinner.setValue(0.3);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton agregarBot;
+    private javax.swing.JSpinner alturaSpinner;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JButton cargarBot;
+    private javax.swing.JTextField codigoCIEField;
+    private javax.swing.JComboBox<String> comboCita;
+    private javax.swing.JTextArea detallesArea;
+    private javax.swing.JTextArea diagnosticoArea;
+    private javax.swing.JButton editarBot;
+    private javax.swing.JCheckBox editarCB;
+    private javax.swing.JButton eliminarBot;
+    private javax.swing.JCheckBox eliminarCB;
+    private javax.swing.JTextField frecCardField;
+    private javax.swing.JCheckBox guardadCB;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JTextField medicoField;
+    private javax.swing.JTextArea observaArea;
+    private javax.swing.JTextField pacienteField;
+    private javax.swing.JSpinner pesoSpinner;
+    private javax.swing.JTextField presionArt;
+    private javax.swing.JTextArea sintomasArea;
+    private javax.swing.JTable tablaCons;
+    private javax.swing.JTable tablaConsDiag;
+    private javax.swing.JTextField tempField;
+    private javax.swing.JTextField tipoDiagField;
     // End of variables declaration//GEN-END:variables
 }
