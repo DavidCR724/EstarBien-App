@@ -1,3 +1,15 @@
 Manifest-Version: 1.0
 X-COMMENT: Main-Class will be added automatically by build
 
+# Librerías necesarias
+Este proyecto utiliza las siguientes librerías externas, incluidas en la carpeta `lib/`:
+- jCalendar-1.4.jar
+- flatlaf-3.6.jar
+- postgresql-42.7.1.jar
+- MisComponentes.jar
+
+Para evitar errores:
+1. Abre el proyecto en NetBeans.
+2. Haz clic derecho sobre el proyecto > Properties > Libraries.
+3. Verifica que estas librerías estén cargadas desde la carpeta `lib/`.
+
