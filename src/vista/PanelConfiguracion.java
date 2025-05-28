@@ -68,10 +68,11 @@ public class PanelConfiguracion extends javax.swing.JPanel {
             case "administrador":
                 if (usuario.getAdministrador() != null) {
                     buscarRol(usuario,"administrador");
-                    nombreCompleto  = admin.getNombre();
                     usuarioNom = usuario.getNombreUsuario();
                     estadoEs = usuario.getActivo() ? "Activo":"No Activo";
                     usuarioGral = usuario;
+                    
+                    nombreCompleto  = admin.getNombre();
 
                 }
                 break;
@@ -105,7 +106,7 @@ public class PanelConfiguracion extends javax.swing.JPanel {
 
     private void buscarRol(Usuario u, String rol) {
         switch (u.getRol()) {
-            case "adminiastrador":
+            case "administrador":
                 for (Administrador ad : administradores) {
                     if (ad.getIdUsuario().getIdUsuario() == u.getIdUsuario()) {
                         admin = ad;
