@@ -57,7 +57,11 @@
                                   <Component id="mascCB" min="-2" max="-2" attributes="0"/>
                                   <Component id="nombreF" max="32767" attributes="0"/>
                                   <Component id="apePF" max="32767" attributes="0"/>
-                                  <Component id="apeMF" max="32767" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Component id="apeMF" max="32767" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="editarB" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                                   <Component id="fechNacS" pref="258" max="32767" attributes="0"/>
                                   <Component id="direccionF" alignment="0" max="32767" attributes="0"/>
                                   <Component id="telefonoF" max="32767" attributes="0"/>
@@ -77,8 +81,7 @@
                                       <Component id="agregarCB" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Component id="editarB" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="94" max="-2" attributes="0"/>
                                       <Component id="editarCB" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
@@ -106,7 +109,7 @@
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace pref="410" max="32767" attributes="0"/>
+                      <EmptySpace pref="409" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jScrollPane2" min="-2" pref="226" max="-2" attributes="0"/>
                           <Component id="jLabel13" min="-2" max="-2" attributes="0"/>

@@ -4,7 +4,9 @@
  */
 package modelo;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -12,54 +14,49 @@ import javax.swing.table.AbstractTableModel;
  * @author carlo
  */
 public class ModTabReceta extends AbstractTableModel{
-    private List<RecetaMedicamento> rmedicamentos;
-    private String encabezados[] = {"ID receta", "ID cita", "Fecha Presc.", "Instrucciones", "Firma", "Dosis", "Frecuencia", "Duración", "Cantidad"};
+    private List<RecetaMedica> recetas;
+    private String encabezados[] = {"Fecha Cita","Instrucciones","Fech. Emision","No. Receta", "Tratamiento"};
     
-    public ModTabReceta(List<RecetaMedicamento> recetaMedicamentos){
-        this.rmedicamentos = recetaMedicamentos;
+    
+    public ModTabReceta(List<RecetaMedica> recetas){
+        this.recetas = recetas;
     }
+
     @Override
     public int getRowCount() {
-        if (rmedicamentos != null) {
-            return rmedicamentos.size();
-        }
+        if(recetas != null)
+            return recetas.size();
         return 0;
-
     }
+    
 
     @Override
     public int getColumnCount() {
         return encabezados.length;
     }
-
     @Override
-    public String getColumnName(int i) {
+    public String getColumnName(int i){
         return encabezados[i];
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        switch (columnIndex) {
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy", new Locale("es", "Es"));
+        switch(columnIndex){
             case 0:
-                return rmedicamentos.get(rowIndex).getIdReceta().getIdReceta();
+                return formato.format(recetas.get(rowIndex).getIdCita().getFecha());
             case 1:
-                return rmedicamentos.get(rowIndex).getIdReceta().getIdCita().getIdCita();
+                return recetas.get(rowIndex).getInstrucciones();
             case 2:
-                return rmedicamentos.get(rowIndex).getIdReceta().getFechaEmision();
+                return formato.format(recetas.get(rowIndex).getFechaEmision());
             case 3:
-                return rmedicamentos.get(rowIndex).getIdReceta().getInstrucciones();
-            case 4:
-                return rmedicamentos.get(rowIndex).getIdReceta().getFirmaDigital();
-            case 5:
-                return rmedicamentos.get(rowIndex).getDosis();
-            case 6:
-                return rmedicamentos.get(rowIndex).getFrecuencia();
-            case 7:
-                return rmedicamentos.get(rowIndex).getDuracion();
+                return recetas.get(rowIndex).getIdReceta();
             default:
-                return rmedicamentos.get(rowIndex).getCantidad();
+                return recetas.get(rowIndex).getIdTratamiento();
         }
-
     }
-    
+    public void actualizar(List<RecetaMedica> recetas){
+        this.recetas = recetas;
+        fireTableDataChanged();
+    }
 }

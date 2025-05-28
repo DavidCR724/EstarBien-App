@@ -6,6 +6,7 @@ package vista;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import control.Sesion;
 import java.util.Date;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -62,6 +63,7 @@ public class PanelConfiguracion extends javax.swing.JPanel {
         usuarioTexto = new javax.swing.JLabel();
         temaBoton = new javax.swing.JButton();
         rolTexto = new javax.swing.JLabel();
+        cerrarSesionBot = new javax.swing.JButton();
 
         setMaximumSize(new java.awt.Dimension(1397, 882));
         setMinimumSize(new java.awt.Dimension(1397, 882));
@@ -78,6 +80,13 @@ public class PanelConfiguracion extends javax.swing.JPanel {
 
         rolTexto.setText("hola");
 
+        cerrarSesionBot.setText("Cerrar Sesion");
+        cerrarSesionBot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cerrarSesionBotActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -93,7 +102,10 @@ public class PanelConfiguracion extends javax.swing.JPanel {
                         .addComponent(rolTexto))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(180, 180, 180)
-                        .addComponent(usuarioTexto, javax.swing.GroupLayout.PREFERRED_SIZE, 748, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(usuarioTexto, javax.swing.GroupLayout.PREFERRED_SIZE, 748, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(323, 323, 323)
+                        .addComponent(cerrarSesionBot)))
                 .addContainerGap(469, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -105,7 +117,9 @@ public class PanelConfiguracion extends javax.swing.JPanel {
                 .addComponent(usuarioTexto, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(rolTexto)
-                .addContainerGap(636, Short.MAX_VALUE))
+                .addGap(49, 49, 49)
+                .addComponent(cerrarSesionBot)
+                .addContainerGap(560, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -132,8 +146,16 @@ public class PanelConfiguracion extends javax.swing.JPanel {
     }
     }//GEN-LAST:event_temaBotonActionPerformed
 
+    private void cerrarSesionBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cerrarSesionBotActionPerformed
+        Sesion.cerrarSesion();
+        MainView mainView = (MainView) SwingUtilities.getWindowAncestor(this);
+        mainView.ocultarTodosLosMenus();
+        mainView.mostrarPanel("IniciarSesion", mainView.panelIniSes);
+    }//GEN-LAST:event_cerrarSesionBotActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton cerrarSesionBot;
     private javax.swing.JLabel rolTexto;
     private javax.swing.JButton temaBoton;
     private javax.swing.JLabel usuarioTexto;

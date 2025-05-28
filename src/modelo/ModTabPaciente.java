@@ -4,7 +4,9 @@
  */
 package modelo;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -51,7 +53,10 @@ public class ModTabPaciente extends AbstractTableModel {
             case 3:
                 return pacientes.get(rowIndex).getApellidoPaterno() + " " + pacientes.get(rowIndex).getApellidoMaterno();
             case 4:
-                return pacientes.get(rowIndex).getFechaNacimiento();
+                SimpleDateFormat formatoEspañol = new SimpleDateFormat("dd/MM/yyyy", new Locale("es", "ES"));
+                // Formatear la fecha
+                String fechaFormateada = formatoEspañol.format(pacientes.get(rowIndex).getFechaNacimiento());
+                return fechaFormateada;
             case 5:
                 return pacientes.get(rowIndex).getGenero();
             default:

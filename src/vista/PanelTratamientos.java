@@ -16,6 +16,7 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 import modelo.CitaMedica;
 import modelo.Medico;
+import modelo.ModTabCitaAux;
 import modelo.ModTabMedicoAux;
 import modelo.ModTabTratamientos;
 import modelo.Paciente;
@@ -33,9 +34,12 @@ public class PanelTratamientos extends javax.swing.JPanel {
     private List<Tratamiento> tratamientos;
     private MedicoJpaController cMedico;
     private List<Medico> medicos;
+    private CitaMedicaJpaController cCitaMedica;
+    private List<CitaMedica> citas;
 
     private ModTabTratamientos modelo;
     private ModTabMedicoAux modeloMed;
+    private ModTabCitaAux modeloCitasTab;
     private Paciente paciente;
     private Medico medico;
     private CitaMedica cita;
@@ -52,7 +56,7 @@ public class PanelTratamientos extends javax.swing.JPanel {
 
         cMedico = new MedicoJpaController(admDatos.getEmf());
         medicos = cMedico.findMedicoEntities();
-
+        
         modeloMed = new ModTabMedicoAux(medicos);
         modelo = new ModTabTratamientos(tratamientos);
 
@@ -66,8 +70,10 @@ public class PanelTratamientos extends javax.swing.JPanel {
     private void cargarComboBox() {
         citaCombo.removeAllItems();
 
+        
         // Obtener todas las citas médicas
         List<CitaMedica> citas = new CitaMedicaJpaController(admDatos.getEmf()).findCitaMedicaEntities();
+        List<CitaMedica> citasAux = new ArrayList<>();
         // Obtener todos los tratamientos para verificar cuáles citas ya tienen tratamiento
         List<Tratamiento> todosTratamientos = cTratamiento.findTratamientoEntities();
 
@@ -83,8 +89,11 @@ public class PanelTratamientos extends javax.swing.JPanel {
         for (CitaMedica cita : citas) {
             if (!citasConTratamiento.contains(cita.getIdCita())) {
                 citaCombo.addItem(cita);
+                citasAux.add(cita);
             }
         }
+        modeloCitasTab = new ModTabCitaAux(citasAux);
+        tabCitas.setModel(modeloCitasTab);
     }
 
     private void limpiarFormulario() {
@@ -132,6 +141,9 @@ public class PanelTratamientos extends javax.swing.JPanel {
         agregarCB = new javax.swing.JCheckBox();
         editarCB = new javax.swing.JCheckBox();
         eliminarCB = new javax.swing.JCheckBox();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        tabCitas = new javax.swing.JTable();
+        jLabel8 = new javax.swing.JLabel();
 
         setMaximumSize(new java.awt.Dimension(1397, 882));
         setMinimumSize(new java.awt.Dimension(1397, 882));
@@ -275,6 +287,21 @@ public class PanelTratamientos extends javax.swing.JPanel {
             }
         });
 
+        tabCitas.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane5.setViewportView(tabCitas);
+
+        jLabel8.setText("Citas Detallas");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -291,38 +318,43 @@ public class PanelTratamientos extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(agregarBot)
-                                    .addComponent(editarBot)
-                                    .addComponent(eliminarBot))
-                                .addGap(36, 36, 36)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(agregarBot)
+                                            .addComponent(editarBot)
+                                            .addComponent(eliminarBot))
+                                        .addGap(36, 36, 36)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(eliminarCB)
+                                            .addComponent(editarCB)
+                                            .addComponent(agregarCB)))
+                                    .addComponent(cargarDatosBot))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(eliminarCB)
-                                    .addComponent(editarCB)
-                                    .addComponent(agregarCB)))
-                            .addComponent(cargarDatosBot))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel7))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(duracionF)
-                            .addComponent(pacienteF)
-                            .addComponent(medicoF)
-                            .addComponent(citaCombo, 0, 260, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jScrollPane3)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 563, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel3))
-                        .addGap(35, 35, 35)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel7))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(duracionF)
+                                    .addComponent(pacienteF)
+                                    .addComponent(medicoF)
+                                    .addComponent(citaCombo, 0, 260, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(jScrollPane3)
+                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 563, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel3))
+                                .addGap(35, 35, 35)
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 523, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel8))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(filtrarPorBot)
                                 .addGap(27, 27, 27)))))
                 .addContainerGap())
@@ -378,9 +410,17 @@ public class PanelTratamientos extends javax.swing.JPanel {
                                     .addComponent(jLabel7))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(filtrarPorBot)
-                .addGap(0, 418, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(filtrarPorBot)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(203, 203, 203))))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -721,13 +761,16 @@ public class PanelTratamientos extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTextField medicoF;
     private javax.swing.JTextField pacienteF;
     private javax.swing.JButton recargaTabla;
+    private javax.swing.JTable tabCitas;
     private javax.swing.JTable tablaMedicos;
     private javax.swing.JTable tablaTratamientos;
     // End of variables declaration//GEN-END:variables

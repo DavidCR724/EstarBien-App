@@ -5,16 +5,36 @@
 package vista;
 
 import control.AdmDatos;
+import control.CitaMedicaJpaController;
 import control.HorarioMedicoJpaController;
+import control.MedicoJpaController;
+import control.PacienteJpaController;
+import java.awt.event.ItemEvent;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+import javax.swing.JOptionPane;
+import modelo.CitaMedica;
 import modelo.HorarioMedico;
 import modelo.MTablaHorario;
+import modelo.Medico;
+import modelo.ModTabCita;
+import modelo.ModTabPacienteCita;
+import modelo.Paciente;
 
 /**
  *
  * @author carlo
  */
 public class PanelCitas extends javax.swing.JPanel {
+
     private HorarioMedicoJpaController cHorario;
     private HorarioMedico horario;
     private List<HorarioMedico> agenda;
@@ -22,17 +42,86 @@ public class PanelCitas extends javax.swing.JPanel {
     //CAMBIAR EL MODELO DE LA TABLA AL DE CITAS
     private MTablaHorario mthorario;
     private int num;
-    
-    /**
-     * Creates new form PanelCitas
-     */
+    //para tabla pacientes
+    private PacienteJpaController cPaciente;
+    private List<Paciente> listpacientes;
+    private Paciente paciente;
+    private ModTabPacienteCita mPaciente;
+    //para combobox de medicos
+    private List<Medico> listmedicos;
+    private Medico medico;
+    private MedicoJpaController cMedico;
+    private final String SELECCIONA = "Selecciona un Médico";
+    //para las citas
+    private CitaMedicaJpaController cCita;
+    private List<CitaMedica> listcitas;
+    private CitaMedica citamedica;
+    private ModTabCita mCitas;
+
+    private HashMap<String, Medico> medicosHash = new HashMap<>();
+    private List<HorarioMedico> listHorarios;
+
     public PanelCitas() {
         initComponents();
-       cHorario = new HorarioMedicoJpaController(admDatos.getEmf());
-       //horario = cHorario.findHorarioMedicoEntities();
-       //num = new MTablaHorario(agenda);
-       //tablahorario.setModel(mthorario);
-        
+        admDatos = new AdmDatos();
+        cHorario = new HorarioMedicoJpaController(admDatos.getEmf());
+        cPaciente = new PacienteJpaController(admDatos.getEmf());
+        cMedico = new MedicoJpaController(admDatos.getEmf());
+        cCita = new CitaMedicaJpaController(admDatos.getEmf());
+
+        // Inicializar listas
+        agenda = new ArrayList<>();
+        listpacientes = new ArrayList<>();
+        listcitas = new ArrayList<>();
+        listmedicos = new ArrayList<>();
+        listHorarios = new ArrayList<>();
+
+        // Cargar datos iniciales
+        listmedicos = cMedico.findMedicoEntities();
+        listcitas = cCita.findCitaMedicaEntities();
+
+        // Crear modelos con listas
+        mPaciente = new ModTabPacienteCita(new ArrayList<>());
+        mthorario = new MTablaHorario(new ArrayList<>());
+        mCitas = new ModTabCita(new ArrayList<>());
+
+        // Configurar tablas
+        tablapacientes.setModel(mPaciente);
+        tablahorario.setModel(mthorario);
+        tablacitas.setModel(mCitas);
+
+        calendario.setMinSelectableDate(new Date());
+        // Cargar datos
+        cargarTablaPacientes();
+        cargarMedicos();
+        cargarTodasLasCitas(); // Cargar todas las citas al iniciar
+    }
+
+    private void cargarTablaPacientes() {
+        admDatos = new AdmDatos();
+        cPaciente = new PacienteJpaController(admDatos.getEmf());
+
+        listpacientes = cPaciente.findPacienteEntities();
+        mPaciente = new ModTabPacienteCita(listpacientes);
+        tablapacientes.setModel(mPaciente);
+    }
+
+    private void cargarMedicos() {
+        jmedicos.removeAllItems();
+        jmedicos.addItem(SELECCIONA);
+
+        for (Medico dmedico : listmedicos) {
+            String nomCom = dmedico.getNombre() + " " + dmedico.getApellidoPaterno() + " " + dmedico.getApellidoMaterno();
+            medicosHash.put(nomCom, dmedico);
+            jmedicos.addItem(nomCom);
+        }
+    }
+
+    private void cargarTodasLasCitas() {
+        listcitas = cCita.findCitaMedicaEntities();
+        mCitas = new ModTabCita(listcitas);
+        tablacitas.setModel(mCitas);
+
     }
 
     /**
@@ -42,149 +131,128 @@ public class PanelCitas extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        accioneaButGroup = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
-        diagnóstico = new javax.swing.JTextField();
-        cboxTratamientos = new javax.swing.JComboBox<>();
-        btnAgendarcita = new javax.swing.JButton();
-        tipoConsulta = new javax.swing.JComboBox<>();
+        angedarBot = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         calendario = new com.toedter.calendar.JCalendar();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
+        nomMedLab = new javax.swing.JLabel();
+        jmedicos = new javax.swing.JComboBox<>();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tablapacientes = new javax.swing.JTable();
+        editarBot = new javax.swing.JButton();
+        jLabel13 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tablacitas = new javax.swing.JTable();
+        bucarPacField = new javax.swing.JTextField();
+        buscarPacBot = new javax.swing.JButton();
+        todasCitasBot = new javax.swing.JButton();
         horaInicio = new javax.swing.JLabel();
+        horaInicioField = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner();
-        jSpinner2 = new javax.swing.JSpinner();
-        jSpinner3 = new javax.swing.JSpinner();
-        jSpinner4 = new javax.swing.JSpinner();
-        jSpinner5 = new javax.swing.JSpinner();
-        jSpinner6 = new javax.swing.JSpinner();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        textNombre = new javax.swing.JTextField();
+        horaFinField = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablahorario = new javax.swing.JTable();
+        comboEstado = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        motivoField = new javax.swing.JTextField();
+        eliminarBot = new javax.swing.JButton();
+        cargarBot = new javax.swing.JButton();
+        eliminarCB = new javax.swing.JCheckBox();
+        agendarCB = new javax.swing.JCheckBox();
+        editCB = new javax.swing.JCheckBox();
 
-        jLabel1.setText("Panel Citas");
+        setMaximumSize(new java.awt.Dimension(1397, 882));
+        setMinimumSize(new java.awt.Dimension(1397, 882));
+        setPreferredSize(new java.awt.Dimension(1397, 882));
 
-        cboxTratamientos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ozonoterapia", "Papanicolao", "Ultrasonido", "Seguimiento de dieta", "Fisioterapia", " " }));
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jLabel1.setText("CITAS ");
 
-        btnAgendarcita.setBackground(new java.awt.Color(0, 204, 0));
-        btnAgendarcita.setText("Agendar Cita");
-        btnAgendarcita.addActionListener(new java.awt.event.ActionListener() {
+        angedarBot.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        angedarBot.setText("Agendar Cita");
+        angedarBot.setEnabled(false);
+        angedarBot.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgendarcitaActionPerformed(evt);
+                angedarBotActionPerformed(evt);
             }
         });
 
-        tipoConsulta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Consulta dignóstica", "Tratamiento médico", "Tratamiento estético" }));
-
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("Datos Generales del paciente:");
 
         jLabel4.setText("Nombre del paciente:");
 
-        jLabel5.setText("Tratamiento: ");
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel7.setText("Medico:");
 
-        jLabel6.setText("Diagnóstico médico:");
+        nomMedLab.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        nomMedLab.setText("Horario del médico");
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel7.setText("Elija el tipo de consulta :");
+        jmedicos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jmedicos.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jmedicosItemStateChanged(evt);
+            }
+        });
+
+        tablapacientes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(tablapacientes);
+
+        editarBot.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        editarBot.setText("Editar Cita");
+        editarBot.setEnabled(false);
+        editarBot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editarBotActionPerformed(evt);
+            }
+        });
+
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel13.setText("Citas agendadas");
+
+        tablacitas.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane3.setViewportView(tablacitas);
+
+        buscarPacBot.setText("Buscar");
+        buscarPacBot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buscarPacBotActionPerformed(evt);
+            }
+        });
+
+        todasCitasBot.setText("Todas Las Citas");
+        todasCitasBot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                todasCitasBotActionPerformed(evt);
+            }
+        });
 
         horaInicio.setBackground(new java.awt.Color(255, 255, 255));
         horaInicio.setText(" Hora de inicio:");
 
         jLabel8.setText("Hora fin:");
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel2.setText(" : ");
-
-        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel10.setText(" : ");
-
-        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel11.setText(" : ");
-
-        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel12.setText(" : ");
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(horaInicio)
-                .addGap(107, 107, 107))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jSpinner4, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jSpinner5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel8))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jSpinner1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(15, 15, 15)
-                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jSpinner3)
-                    .addComponent(jSpinner6))
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(4, 4, 4)
-                .addComponent(horaInicio)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jSpinner3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel10))
-                .addGap(28, 28, 28)
-                .addComponent(jLabel8)
-                .addGap(6, 6, 6)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jSpinner4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jSpinner5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jSpinner6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel12)
-                    .addComponent(jLabel11))
-                .addContainerGap(30, Short.MAX_VALUE))
-        );
-
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 3, 12)); // NOI18N
-        jLabel9.setText("Horario del médico");
-
-        textNombre.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textNombreActionPerformed(evt);
-            }
-        });
 
         tablahorario.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -199,131 +267,807 @@ public class PanelCitas extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(tablahorario);
 
+        comboEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "pendiente", "completada", "confirmada", "reagendada" }));
+
+        jLabel2.setText("Estado");
+
+        jLabel5.setText("Motivo");
+
+        eliminarBot.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        eliminarBot.setText("Eliminar Cita");
+        eliminarBot.setEnabled(false);
+        eliminarBot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eliminarBotActionPerformed(evt);
+            }
+        });
+
+        cargarBot.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        cargarBot.setText("Cargar Cita");
+        cargarBot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cargarBotActionPerformed(evt);
+            }
+        });
+
+        accioneaButGroup.add(eliminarCB);
+        eliminarCB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eliminarCBActionPerformed(evt);
+            }
+        });
+
+        accioneaButGroup.add(agendarCB);
+        agendarCB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                agendarCBActionPerformed(evt);
+            }
+        });
+
+        accioneaButGroup.add(editCB);
+        editCB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editCBActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jmedicos, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(nomMedLab, javax.swing.GroupLayout.PREFERRED_SIZE, 419, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 656, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cargarBot))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(37, 37, 37)
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jLabel13)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(todasCitasBot)
+                                .addContainerGap())
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 729, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(118, 118, 118)
-                                .addComponent(btnAgendarcita))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(235, 235, 235)
-                                .addComponent(jLabel1)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 84, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 19, Short.MAX_VALUE))
+                                    .addComponent(bucarPacField))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(buscarPacBot))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(calendario, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(horaInicioField, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(horaInicio))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel8)
+                                            .addComponent(horaFinField, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(comboEstado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel5)
+                                    .addComponent(motivoField))
+                                .addContainerGap())
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel9)
-                                .addGap(157, 157, 157))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(99, 99, 99)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tipoConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(textNombre)
-                                .addComponent(diagnóstico)
-                                .addComponent(cboxTratamientos, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(calendario, javax.swing.GroupLayout.PREFERRED_SIZE, 434, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(17, 17, 17))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(editarBot, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(editCB)
+                                        .addGap(47, 47, 47)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(angedarBot, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(eliminarBot)
+                                        .addGap(220, 220, 220))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addGap(64, 64, 64)
+                                        .addComponent(agendarCB)
+                                        .addGap(92, 92, 92)
+                                        .addComponent(eliminarCB)
+                                        .addContainerGap())))))))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jmedicos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(todasCitasBot)
+                    .addComponent(nomMedLab))
+                .addGap(12, 12, 12)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tipoConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(textNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel5)
-                        .addGap(3, 3, 3)
-                        .addComponent(cboxTratamientos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(diagnóstico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(25, 25, 25))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(calendario, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel9)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(16, 16, 16)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(editarBot)
+                            .addComponent(angedarBot)
+                            .addComponent(eliminarBot))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(editCB)
+                                .addGap(2, 2, 2))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(eliminarCB, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(agendarCB, javax.swing.GroupLayout.Alignment.TRAILING)))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
                             .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 95, Short.MAX_VALUE)
-                                .addComponent(btnAgendarcita)
-                                .addGap(110, 110, 110))
+                                .addGap(2, 2, 2)
+                                .addComponent(cargarBot)))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel4)
+                        .addGap(15, 15, 15)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(calendario, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(bucarPacField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(buscarPacBot))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(horaInicio)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(horaInicioField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel8)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(horaFinField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel2)
+                                .addGap(9, 9, 9)
+                                .addComponent(comboEstado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(85, 85, 85))))
+                                .addComponent(motivoField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAgendarcitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgendarcitaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnAgendarcitaActionPerformed
+    // Para asegurar que solo se considere la fecha (sin hora) en el calendario
+    // se puede hacer desde la gui
 
-    private void textNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textNombreActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textNombreActionPerformed
+    private void angedarBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_angedarBotActionPerformed
+        // Validar selección de paciente
+        int filaPaciente = tablapacientes.getSelectedRow();
+        if (filaPaciente == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un paciente", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
+        // Validar selección de médico
+        String keyNom = (String) jmedicos.getSelectedItem();
+        if (keyNom == null || keyNom.equals(SELECCIONA)) {
+            JOptionPane.showMessageDialog(this, "Seleccione un médico", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Validar selección de horario
+        int filaHorario = tablahorario.getSelectedRow();
+        if (filaHorario == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un horario disponible", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Validar campos obligatorios
+        if (horaInicioField.getText().trim().isEmpty() || horaFinField.getText().trim().isEmpty()
+                || motivoField.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Complete todos los campos obligatorios", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Validar fecha y horario
+        if (!validarDiaDisponibleSegunHorario() || !validarHorasDentroDelHorario()) {
+            return;
+        }
+
+        try {
+            // Obtener objetos seleccionados
+            Paciente pacienteSel = listpacientes.get(filaPaciente);
+            Medico medicoSel = medicosHash.get(keyNom);
+            int idHorario = (int) tablahorario.getValueAt(filaHorario, 3);
+            HorarioMedico horarioSel = cHorario.findHorarioMedico(idHorario);
+
+            // Crear nueva cita
+            CitaMedica nuevaCita = new CitaMedica();
+            nuevaCita.setIdPaciente(pacienteSel);
+            nuevaCita.setIdMedico(medicoSel);
+            nuevaCita.setIdHorario(horarioSel);
+
+            // Obtener fecha del calendario (solo fecha, sin hora)
+            LocalDate fechaLocal = calendario.getDate().toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+
+            // Obtener hora del campo de texto
+            LocalTime horaLocal = LocalTime.parse(horaInicioField.getText().trim());
+
+            // Combinar fecha y hora en java.sql.Date y java.sql.Time
+            java.sql.Date fechaSQL = java.sql.Date.valueOf(fechaLocal);
+            java.sql.Time horaSQL = java.sql.Time.valueOf(horaLocal);
+
+            // Asignar a la cita (dependiendo de cómo esté definido tu modelo)
+            nuevaCita.setFecha(fechaSQL);  // Solo la fecha
+            nuevaCita.setHora(horaSQL);    // Solo la hora
+
+            // Configurar otros campos
+            nuevaCita.setMotivo(motivoField.getText().trim());
+
+            nuevaCita.setEstatus(comboEstado.getSelectedItem().toString().toLowerCase());
+            // Validar que no exista cita duplicada
+            if (existeCitaDuplicada(medicoSel.getIdMedico(), nuevaCita.getFecha())) {
+                JOptionPane.showMessageDialog(this, "El médico ya tiene una cita programada para esta fecha y hora", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Guardar en BD
+            cCita.create(nuevaCita);
+
+            // Actualizar listas
+            listcitas = cCita.findCitaMedicaEntities();
+            mCitas.actualizar(listcitas);
+            tablacitas.setModel(mCitas);
+            cargarTodasLasCitas();
+            // Limpiar campos
+            limpiarCampos();
+
+            JOptionPane.showMessageDialog(this, "Cita agendada exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al agendar cita: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        editarBot.setEnabled(false);
+        angedarBot.setEnabled(false);
+        eliminarBot.setEnabled(false);
+        agendarCB.setSelected(false);
+    }//GEN-LAST:event_angedarBotActionPerformed
+
+    private void jmedicosItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jmedicosItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            String keyNom = (String) jmedicos.getSelectedItem();
+
+            if (keyNom == null || keyNom.equals(SELECCIONA)) {
+                tablahorario.setModel(new MTablaHorario(new ArrayList<>()));
+                tablacitas.setModel(new ModTabCita(new ArrayList<>()));
+                nomMedLab.setText("Seleccione un médico");
+                return;
+            }
+
+            Medico medAux = medicosHash.get(keyNom);
+
+            if (medAux == null) {
+                JOptionPane.showMessageDialog(this, "Médico no encontrado", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Cargar horarios del médico
+            listHorarios = cHorario.findHorarioMedicoEntities();
+            List<HorarioMedico> horarioFilter = listHorarios.stream()
+                    .filter(hm -> hm.getIdMedico() != null
+                    && hm.getIdMedico().getIdMedico() == medAux.getIdMedico())
+                    .collect(Collectors.toList());
+
+            nomMedLab.setText("Horario del médico: " + keyNom);
+            mthorario = new MTablaHorario(horarioFilter);
+            tablahorario.setModel(mthorario);
+
+            // Cargar citas del médico
+            List<CitaMedica> citasFiltradas = listcitas.stream()
+                    .filter(c -> c.getIdMedico() != null
+                    && c.getIdMedico().getIdMedico() == medAux.getIdMedico())
+                    .collect(Collectors.toList());
+
+            mCitas = new ModTabCita(citasFiltradas);
+            tablacitas.setModel(mCitas);
+        }
+    }//GEN-LAST:event_jmedicosItemStateChanged
+
+    private void todasCitasBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_todasCitasBotActionPerformed
+        cargarTodasLasCitas();
+        jmedicos.setSelectedIndex(0); // Resetear combo box
+        nomMedLab.setText("Todas las citas");
+    }//GEN-LAST:event_todasCitasBotActionPerformed
+
+    private void buscarPacBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarPacBotActionPerformed
+        String criterio = bucarPacField.getText().trim();
+
+        if (criterio.isEmpty()) {
+            cargarTablaPacientes();
+            return;
+        }
+
+        List<Paciente> pacientesFiltrados = listpacientes.stream()
+                .filter(p -> p.getNombre().toLowerCase().contains(criterio.toLowerCase())
+                || p.getApellidoPaterno().toLowerCase().contains(criterio.toLowerCase())
+                || p.getApellidoMaterno().toLowerCase().contains(criterio.toLowerCase())
+                || (p.getIdPaciente() != null && p.getIdPaciente().equals(criterio)))
+                .collect(Collectors.toList());
+
+        mPaciente = new ModTabPacienteCita(pacientesFiltrados);
+        tablapacientes.setModel(mPaciente);
+    }//GEN-LAST:event_buscarPacBotActionPerformed
+
+    private void eliminarBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarBotActionPerformed
+        int filaSeleccionada = tablacitas.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione una cita para eliminar", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int confirmacion = JOptionPane.showConfirmDialog(
+                this,
+                "¿Está seguro que desea eliminar esta cita?",
+                "Confirmar eliminación",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirmacion != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        try {
+            // Obtener cita seleccionada
+
+            int idCita = (int) tablacitas.getValueAt(filaSeleccionada, 0);
+            CitaMedica citaSeleccionada = cCita.findCitaMedica(idCita);
+
+            // Eliminar de la BD
+            cCita.destroy(citaSeleccionada.getIdCita());
+
+            // Actualizar listas
+            listcitas = cCita.findCitaMedicaEntities();
+            String keyNom = (String) jmedicos.getSelectedItem();
+
+            if (keyNom != null && !keyNom.equals(SELECCIONA)) {
+                Medico medicoSel = medicosHash.get(keyNom);
+                List<CitaMedica> citasFiltradas = listcitas.stream()
+                        .filter(c -> c.getIdMedico().getIdMedico() == medicoSel.getIdMedico())
+                        .collect(Collectors.toList());
+                mCitas = new ModTabCita(citasFiltradas);
+            } else {
+                mCitas = new ModTabCita(listcitas);
+            }
+            tablacitas.setModel(mCitas);
+
+            // Limpiar campos si es necesario
+            if (tablacitas.getRowCount() == 0) {
+                limpiarCampos();
+            }
+
+            JOptionPane.showMessageDialog(this, "Cita eliminada exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al eliminar cita: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        editarBot.setEnabled(false);
+        angedarBot.setEnabled(false);
+        eliminarBot.setEnabled(false);
+        eliminarCB.setSelected(false);
+    }//GEN-LAST:event_eliminarBotActionPerformed
+
+    private void editarBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarBotActionPerformed
+        int filaSeleccionada = tablacitas.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione una cita para editar", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Validar campos obligatorios
+        if (horaInicioField.getText().trim().isEmpty() || motivoField.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Complete todos los campos obligatorios", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            // Obtener cita seleccionada
+            int idCitaEd = (int) tablacitas.getValueAt(filaSeleccionada,0);
+              CitaMedica citaSeleccionada = cCita.findCitaMedica(idCitaEd) ;
+
+            // Validar que no se edite una cita completada o cancelada
+            if (citaSeleccionada.getEstatus().equals("completada")
+                    || citaSeleccionada.getEstatus().equals("cancelada")) {
+                JOptionPane.showMessageDialog(this, "No se puede editar una cita " + citaSeleccionada.getEstatus(), "Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            // Actualizar datos de la cita
+            Date fechaSeleccionada = calendario.getDate();
+            LocalTime horaInicio = LocalTime.parse(horaInicioField.getText().trim());
+
+            // Obtener fecha del calendario (solo fecha, sin hora)
+            LocalDate fechaLocal = calendario.getDate().toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+
+            // Obtener hora del campo de texto
+            LocalTime horaLocal = LocalTime.parse(horaInicioField.getText().trim());
+
+            // Combinar fecha y hora en java.sql.Date y java.sql.Time
+            java.sql.Date fechaSQL = java.sql.Date.valueOf(fechaLocal);
+            java.sql.Time horaSQL = java.sql.Time.valueOf(horaLocal);
+
+            // Asignar a la cita (dependiendo de cómo esté definido tu modelo)
+            citaSeleccionada.setFecha(fechaSQL);  // Solo la fecha
+            citaSeleccionada.setHora(horaSQL);    // Solo la hora
+            
+            citaSeleccionada.setMotivo(motivoField.getText());
+
+            // Actualizar médico si cambió
+            String keyNom = (String) jmedicos.getSelectedItem();
+            if (keyNom != null && !keyNom.equals(SELECCIONA)) {
+                Medico nuevoMedico = medicosHash.get(keyNom);
+                citaSeleccionada.setIdMedico(nuevoMedico);
+            }
+
+            // Actualizar horario si cambió
+            int filaHorario = tablahorario.getSelectedRow();
+            if (filaHorario != -1) {
+                int idHorMed = (int) tablahorario.getValueAt(filaHorario,3);
+                HorarioMedico nuevoHorario = cHorario.findHorarioMedico(idHorMed);
+                citaSeleccionada.setIdHorario(nuevoHorario);
+            }
+
+            // Guardar cambios en BD
+            cCita.edit(citaSeleccionada);
+
+            // Actualizar lista de citas
+            listcitas = cCita.findCitaMedicaEntities();
+            if (keyNom != null && !keyNom.equals(SELECCIONA)) {
+                Medico medicoSel = medicosHash.get(keyNom);
+                List<CitaMedica> citasFiltradas = listcitas.stream()
+                        .filter(c -> c.getIdMedico().getIdMedico() == medicoSel.getIdMedico())
+                        .collect(Collectors.toList());
+                mCitas = new ModTabCita(citasFiltradas);
+            } else {
+                mCitas = new ModTabCita(listcitas);
+            }
+            tablacitas.setModel(mCitas);
+
+            JOptionPane.showMessageDialog(this, "Cita actualizada exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al editar cita: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        editarBot.setEnabled(false);
+        angedarBot.setEnabled(false);
+        eliminarBot.setEnabled(false);
+        editCB.setSelected(false);
+    }//GEN-LAST:event_editarBotActionPerformed
+
+    private void cargarBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarBotActionPerformed
+        int filaSeleccionada = tablacitas.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione una cita para cargar", "Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            // Obtener cita seleccionada - Solución al error de conversión
+            Object idObj = tablacitas.getValueAt(filaSeleccionada, 0);
+            int idCita;
+
+            if (idObj instanceof Integer) {
+                idCita = (Integer) idObj;
+            } else if (idObj instanceof String) {
+                idCita = Integer.parseInt((String) idObj);
+            } else {
+                throw new IllegalArgumentException("Tipo de ID no soportado: " + idObj.getClass());
+            }
+
+            CitaMedica citaSeleccionada = cCita.findCitaMedica(idCita);
+
+            // Cargar datos en los campos
+            calendario.setDate(citaSeleccionada.getFecha());
+
+            // Configurar combo de médicos
+            Medico medico = citaSeleccionada.getIdMedico();
+            String nombreMedico = medico.getNombre() + " " + medico.getApellidoPaterno() + " " + medico.getApellidoMaterno();
+            jmedicos.setSelectedItem(nombreMedico);
+
+            // Configurar horas
+            LocalTime horadisp = convertirDateALocalTime(citaSeleccionada.getHora());
+            horaInicioField.setText(horadisp.format(DateTimeFormatter.ofPattern("HH:mm")));
+
+            // Configurar otros campos con validación de nulos
+            motivoField.setText(citaSeleccionada.getMotivo() != null ? citaSeleccionada.getMotivo() : "");
+
+            if (citaSeleccionada.getEstatus() != null) {
+                comboEstado.setSelectedItem(citaSeleccionada.getEstatus());
+            } else {
+                comboEstado.setSelectedIndex(0);
+            }
+
+            // Buscar y seleccionar paciente en la tabla
+            if (citaSeleccionada.getIdPaciente() != null) {
+                seleccionarPaciente(citaSeleccionada.getIdPaciente().getIdPaciente());
+            }
+
+            // Buscar y seleccionar horario en la tabla
+            if (citaSeleccionada.getIdHorario() != null) {
+                seleccionarHorario(citaSeleccionada.getIdHorario().getIdHorario());
+            }
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Error: El ID de la cita no es un número válido", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar cita: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        editarBot.setEnabled(false);
+        angedarBot.setEnabled(false);
+        eliminarBot.setEnabled(false);
+    }//GEN-LAST:event_cargarBotActionPerformed
+
+    private void editCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editCBActionPerformed
+        editarBot.setEnabled(true);
+        angedarBot.setEnabled(false);
+        eliminarBot.setEnabled(false);
+        
+    }//GEN-LAST:event_editCBActionPerformed
+
+    private void agendarCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agendarCBActionPerformed
+        editarBot.setEnabled(false);
+        angedarBot.setEnabled(true);
+        eliminarBot.setEnabled(false);
+    }//GEN-LAST:event_agendarCBActionPerformed
+
+    private void eliminarCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarCBActionPerformed
+        editarBot.setEnabled(false);
+        angedarBot.setEnabled(false);
+        eliminarBot.setEnabled(true);
+    }//GEN-LAST:event_eliminarCBActionPerformed
+
+    private boolean esHoraValida(String hora) {
+        return hora.matches("([01]\\d|2[0-3]):[0-5]\\d");
+    }
+
+    private LocalTime convertirTextoALocalTime(String horaTexto) {
+        return LocalTime.parse(horaTexto); // formato HH:mm
+    }
+
+    private LocalTime convertirDateALocalTime(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
+    }
+
+    private boolean validarHorasDentroDelHorario() {
+        int filaSeleccionada = tablahorario.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona un horario de la tabla.", "Sin selección", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        int idHorario = (int) tablahorario.getValueAt(filaSeleccionada, 3);
+        HorarioMedico horarioSeleccionado = cHorario.findHorarioMedico(idHorario);
+
+        // Convertir horarios del médico a LocalTime
+        LocalTime horaInicioHorario = convertirDateALocalTime(horarioSeleccionado.getHoraInicio());
+        LocalTime horaFinHorario = convertirDateALocalTime(horarioSeleccionado.getHoraFin());
+
+        // Obtener texto de los fields
+        String strHoraInicio = horaInicioField.getText().trim();
+        String strHoraFin = horaFinField.getText().trim();
+
+        // Validar formato HH:mm
+        if (!esHoraValida(strHoraInicio) || !esHoraValida(strHoraFin)) {
+            JOptionPane.showMessageDialog(this, "Las horas deben estar en formato HH:mm", "Formato inválido", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        // Convertir texto a LocalTime
+        LocalTime horaInicioIngresada = convertirTextoALocalTime(strHoraInicio);
+        LocalTime horaFinIngresada = convertirTextoALocalTime(strHoraFin);
+
+        // Validar que la hora inicio sea antes que la hora fin
+        if (!horaInicioIngresada.isBefore(horaFinIngresada)) {
+            JOptionPane.showMessageDialog(this, "La hora de inicio debe ser anterior a la hora de fin.", "Rango inválido", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // Validar que ambas estén dentro del rango del horario del médico
+        if (horaInicioIngresada.isBefore(horaInicioHorario) || horaFinIngresada.isAfter(horaFinHorario)) {
+            JOptionPane.showMessageDialog(this, "Las horas ingresadas deben estar dentro del horario del médico.", "Hora fuera de rango", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        return true; // Todo correcto
+    }
+
+    private boolean validarDiaDisponibleSegunHorario() {
+        // Obtener la fecha seleccionada del calendario
+        Date fechaSeleccionada = calendario.getDate();
+
+        if (fechaSeleccionada == null) {
+            JOptionPane.showMessageDialog(this, "Selecciona una fecha.", "Fecha requerida", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        // Convertir Date a LocalDate
+        LocalDate localFecha = fechaSeleccionada.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        // Obtener el día de la semana (por ejemplo MONDAY)
+        DayOfWeek diaSemana = localFecha.getDayOfWeek();
+
+        // Traducir el día de la semana a español
+        String diaActual;
+        switch (diaSemana) {
+            case MONDAY:
+                diaActual = "LUNES";
+                break;
+            case TUESDAY:
+                diaActual = "MARTES";
+                break;
+            case WEDNESDAY:
+                diaActual = "MIÉRCOLES";
+                break;
+            case THURSDAY:
+                diaActual = "JUEVES";
+                break;
+            case FRIDAY:
+                diaActual = "VIERNES";
+                break;
+            case SATURDAY:
+                diaActual = "SÁBADO";
+                break;
+            case SUNDAY:
+                diaActual = "DOMINGO";
+                break;
+            default:
+                diaActual = "";
+        }
+
+        // Obtener horario seleccionado de la tabla
+        int filaSeleccionada = tablahorario.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Selecciona un horario de la tabla.", "Sin selección", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        int idHorario = (int) tablahorario.getValueAt(filaSeleccionada, 3); // Asume que la columna 3 tiene el ID
+        HorarioMedico horarioSeleccionado = cHorario.findHorarioMedico(idHorario);
+
+        // Comparar día de la semana (asumiendo que HorarioMedico tiene getDia() tipo String, ej. "Lunes")
+        String diaPermitido = horarioSeleccionado.getDiaSemana().toUpperCase(); // ejemplo: "LUNES"
+
+        if (!diaActual.equalsIgnoreCase(diaPermitido)) {
+            JOptionPane.showMessageDialog(this, "La fecha seleccionada no coincide con el día de disponibilidad del médico (" + diaPermitido + ").", "Día inválido", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean existeCitaDuplicada(int idMedico, Date fecha) {
+        return listcitas.stream().anyMatch(c
+                -> c.getIdMedico().getIdMedico() == idMedico
+                && c.getFecha().equals(fecha));
+    }
+
+    private void limpiarCampos() {
+        horaInicioField.setText("");
+        horaFinField.setText("");
+        motivoField.setText("");
+        comboEstado.setSelectedIndex(0);
+    }
+
+    private void seleccionarPaciente(int idPaciente) {
+        for (int i = 0; i < tablapacientes.getRowCount(); i++) {
+            Object valorId = tablapacientes.getValueAt(i, 1);
+            int idFila;
+
+            if (valorId instanceof Integer) {
+                idFila = (Integer) valorId;
+            } else if (valorId instanceof String) {
+                try {
+                    idFila = Integer.parseInt((String) valorId);
+                } catch (NumberFormatException e) {
+                    continue;
+                }
+            } else {
+                continue;
+            }
+
+            if (idFila == idPaciente) {
+                tablapacientes.setRowSelectionInterval(i, i);
+                return;
+            }
+        }
+
+        JOptionPane.showMessageDialog(this, "No se encontró al paciente en la tabla", "Advertencia", JOptionPane.WARNING_MESSAGE);
+    }
+
+    private void seleccionarHorario(int idHorario) {
+        for (int i = 0; i < tablahorario.getRowCount(); i++) {
+            Object valorId = tablahorario.getValueAt(i, 3); // Columna donde está el ID del horario
+
+            int idFila;
+            if (valorId instanceof Integer) {
+                idFila = (Integer) valorId;
+            } else if (valorId instanceof String) {
+                try {
+                    idFila = Integer.parseInt((String) valorId);
+                } catch (NumberFormatException e) {
+                    continue;
+                }
+            } else {
+                continue;
+            }
+
+            if (idFila == idHorario) {
+                tablahorario.setRowSelectionInterval(i, i);
+                return;
+            }
+        }
+        JOptionPane.showMessageDialog(this, "No se encontró el horario en la tabla", "Advertencia", JOptionPane.WARNING_MESSAGE);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAgendarcita;
+    private javax.swing.ButtonGroup accioneaButGroup;
+    private javax.swing.JCheckBox agendarCB;
+    private javax.swing.JButton angedarBot;
+    private javax.swing.JTextField bucarPacField;
+    private javax.swing.JButton buscarPacBot;
     private com.toedter.calendar.JCalendar calendario;
-    private javax.swing.JComboBox<String> cboxTratamientos;
-    private javax.swing.JTextField diagnóstico;
+    private javax.swing.JButton cargarBot;
+    private javax.swing.JComboBox<String> comboEstado;
+    private javax.swing.JCheckBox editCB;
+    private javax.swing.JButton editarBot;
+    private javax.swing.JButton eliminarBot;
+    private javax.swing.JCheckBox eliminarCB;
+    private javax.swing.JTextField horaFinField;
     private javax.swing.JLabel horaInicio;
+    private javax.swing.JTextField horaInicioField;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JSpinner jSpinner2;
-    private javax.swing.JSpinner jSpinner3;
-    private javax.swing.JSpinner jSpinner4;
-    private javax.swing.JSpinner jSpinner5;
-    private javax.swing.JSpinner jSpinner6;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JComboBox<String> jmedicos;
+    private javax.swing.JTextField motivoField;
+    private javax.swing.JLabel nomMedLab;
+    private javax.swing.JTable tablacitas;
     private javax.swing.JTable tablahorario;
-    private javax.swing.JTextField textNombre;
-    private javax.swing.JComboBox<String> tipoConsulta;
+    private javax.swing.JTable tablapacientes;
+    private javax.swing.JButton todasCitasBot;
     // End of variables declaration//GEN-END:variables
 }

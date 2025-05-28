@@ -20,7 +20,7 @@
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="configMenuMouseClicked"/>
           </Events>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="recetasItem">
+        <Menu class="javax.swing.JMenu" name="pacientesMenu">
           <Properties>
             <Property name="text" type="java.lang.String" value="Pacientes"/>
           </Properties>
@@ -129,6 +129,14 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="citasItemActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="consultasItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Consultas"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="consultasItemActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
