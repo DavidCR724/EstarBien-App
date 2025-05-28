@@ -27,6 +27,9 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="pacienteItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+1"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Pacientes"/>
               </Properties>
               <Events>
@@ -35,6 +38,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="ExpedienteItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+2"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Expedientes"/>
               </Properties>
               <Events>
@@ -43,6 +49,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="tratamientoItem">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+3"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Tratamiento"/>
               </Properties>
               <Events>
@@ -51,6 +60,9 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="Recetas">
               <Properties>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Ctrl+4"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Recetas"/>
               </Properties>
               <Events>

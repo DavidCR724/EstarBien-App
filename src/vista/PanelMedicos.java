@@ -4,12 +4,20 @@
  */
 package vista;
 
+import control.MedicoJpaController;
+import modelo.HorarioMedico;
+import modelo.Medico;
+
 /**
  *
  * @author carlo
  */
 public class PanelMedicos extends javax.swing.JPanel {
-
+    private MedicoJpaController cMedico;
+    private Medico medico;
+    private HorarioMedico horariom;
+    
+    
     /**
      * Creates new form PanelMedicos
      */
@@ -26,23 +34,23 @@ public class PanelMedicos extends javax.swing.JPanel {
 
         jLabel1 = new javax.swing.JLabel();
 
-        jLabel1.setText("Panel Medicos");
+        jLabel1.setText("jLabel1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(166, 166, 166)
-                .addComponent(jLabel1)
-                .addContainerGap(157, Short.MAX_VALUE))
+                .addGap(130, 130, 130)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(423, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(131, 131, 131)
+                .addGap(142, 142, 142)
                 .addComponent(jLabel1)
-                .addContainerGap(153, Short.MAX_VALUE))
+                .addContainerGap(384, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

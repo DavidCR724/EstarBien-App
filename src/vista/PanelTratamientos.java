@@ -4,17 +4,96 @@
  */
 package vista;
 
+import control.AdmDatos;
+import control.CitaMedicaJpaController;
+import control.MedicoJpaController;
+import control.TratamientoJpaController;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import javax.swing.JOptionPane;
+import modelo.CitaMedica;
+import modelo.Medico;
+import modelo.ModTabMedicoAux;
+import modelo.ModTabTratamientos;
+import modelo.Paciente;
+import modelo.Tratamiento;
+
 /**
  *
  * @author carlo
  */
 public class PanelTratamientos extends javax.swing.JPanel {
 
+    private AdmDatos admDatos = new AdmDatos();
+
+    private TratamientoJpaController cTratamiento;
+    private List<Tratamiento> tratamientos;
+    private MedicoJpaController cMedico;
+    private List<Medico> medicos;
+
+    private ModTabTratamientos modelo;
+    private ModTabMedicoAux modeloMed;
+    private Paciente paciente;
+    private Medico medico;
+    private CitaMedica cita;
+    private Tratamiento tratamiento = new Tratamiento();
+
     /**
      * Creates new form PanelTratamientos
      */
     public PanelTratamientos() {
         initComponents();
+        cTratamiento = new TratamientoJpaController(admDatos.getEmf());
+        tratamientos = cTratamiento.findTratamientoEntities();
+        tratamientos.sort(Comparator.comparing(Tratamiento::getIdTratamiento));
+
+        cMedico = new MedicoJpaController(admDatos.getEmf());
+        medicos = cMedico.findMedicoEntities();
+
+        modeloMed = new ModTabMedicoAux(medicos);
+        modelo = new ModTabTratamientos(tratamientos);
+
+        tablaTratamientos.setModel(modelo);
+        tablaMedicos.setModel(modeloMed);
+
+        cargarComboBox();
+    }
+
+    // Método para cargar los ComboBox de Médicos y Pacientes
+    private void cargarComboBox() {
+        citaCombo.removeAllItems();
+
+        // Obtener todas las citas médicas
+        List<CitaMedica> citas = new CitaMedicaJpaController(admDatos.getEmf()).findCitaMedicaEntities();
+        // Obtener todos los tratamientos para verificar cuáles citas ya tienen tratamiento
+        List<Tratamiento> todosTratamientos = cTratamiento.findTratamientoEntities();
+
+        // Crear un conjunto con los IDs de citas que ya tienen tratamiento
+        Set<Integer> citasConTratamiento = new HashSet<>();
+        for (Tratamiento t : todosTratamientos) {
+            if (t.getIdCita() != null) {
+                citasConTratamiento.add(t.getIdCita().getIdCita());
+            }
+        }
+
+        // Filtrar solo las citas que NO tienen tratamiento
+        for (CitaMedica cita : citas) {
+            if (!citasConTratamiento.contains(cita.getIdCita())) {
+                citaCombo.addItem(cita);
+            }
+        }
+    }
+
+    private void limpiarFormulario() {
+        diagnosticoArea.setText("");
+        indicacionesArea.setText("");
+        duracionF.setText("");
+        pacienteF.setText("");
+        medicoF.setText("");
+        citaCombo.setSelectedIndex(-1);
     }
 
     /**
@@ -24,30 +103,632 @@ public class PanelTratamientos extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        acciones = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaTratamientos = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        diagnosticoArea = new javax.swing.JTextArea();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        indicacionesArea = new javax.swing.JTextArea();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        duracionF = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        agregarBot = new javax.swing.JButton();
+        editarBot = new javax.swing.JButton();
+        eliminarBot = new javax.swing.JButton();
+        cargarDatosBot = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        citaCombo = new javax.swing.JComboBox<>();
+        pacienteF = new javax.swing.JTextField();
+        medicoF = new javax.swing.JTextField();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        tablaMedicos = new javax.swing.JTable();
+        filtrarPorBot = new javax.swing.JButton();
+        recargaTabla = new javax.swing.JButton();
+        agregarCB = new javax.swing.JCheckBox();
+        editarCB = new javax.swing.JCheckBox();
+        eliminarCB = new javax.swing.JCheckBox();
 
+        setMaximumSize(new java.awt.Dimension(1397, 882));
+        setMinimumSize(new java.awt.Dimension(1397, 882));
+        setPreferredSize(new java.awt.Dimension(1397, 882));
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         jLabel1.setText("Panel Tratamientos");
+
+        tablaTratamientos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tablaTratamientos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaTratamientosMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tablaTratamientos);
+
+        jLabel2.setText("Diagnostico:");
+
+        diagnosticoArea.setColumns(20);
+        diagnosticoArea.setRows(5);
+        jScrollPane2.setViewportView(diagnosticoArea);
+
+        indicacionesArea.setColumns(20);
+        indicacionesArea.setRows(5);
+        jScrollPane3.setViewportView(indicacionesArea);
+
+        jLabel3.setText("Indiciaciones:");
+
+        jLabel4.setText("Duracion:");
+
+        jLabel5.setText("Paciente:");
+
+        jLabel6.setText("Medico:");
+
+        agregarBot.setText("Agregar");
+        agregarBot.setEnabled(false);
+        agregarBot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                agregarBotActionPerformed(evt);
+            }
+        });
+
+        editarBot.setText("Editar");
+        editarBot.setEnabled(false);
+        editarBot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editarBotActionPerformed(evt);
+            }
+        });
+
+        eliminarBot.setText("Eliminar");
+        eliminarBot.setEnabled(false);
+        eliminarBot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eliminarBotActionPerformed(evt);
+            }
+        });
+
+        cargarDatosBot.setText("Cargar Datos");
+        cargarDatosBot.setEnabled(false);
+        cargarDatosBot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cargarDatosBotActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setText("Cita:");
+
+        citaCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                citaComboActionPerformed(evt);
+            }
+        });
+
+        pacienteF.setEditable(false);
+
+        medicoF.setEditable(false);
+
+        tablaMedicos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2"
+            }
+        ));
+        tablaMedicos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaMedicosMouseClicked(evt);
+            }
+        });
+        jScrollPane4.setViewportView(tablaMedicos);
+
+        filtrarPorBot.setText("Buscar por Medico");
+        filtrarPorBot.setEnabled(false);
+        filtrarPorBot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filtrarPorBotActionPerformed(evt);
+            }
+        });
+
+        recargaTabla.setText("Recargar Tabla");
+        recargaTabla.setEnabled(false);
+        recargaTabla.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                recargaTablaActionPerformed(evt);
+            }
+        });
+
+        acciones.add(agregarCB);
+        agregarCB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                agregarCBActionPerformed(evt);
+            }
+        });
+
+        acciones.add(editarCB);
+        editarCB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editarCBActionPerformed(evt);
+            }
+        });
+
+        acciones.add(eliminarCB);
+        eliminarCB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eliminarCBActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1397, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(159, 159, 159)
-                .addComponent(jLabel1)
-                .addContainerGap(139, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(recargaTabla))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(agregarBot)
+                                    .addComponent(editarBot)
+                                    .addComponent(eliminarBot))
+                                .addGap(36, 36, 36)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(eliminarCB)
+                                    .addComponent(editarCB)
+                                    .addComponent(agregarCB)))
+                            .addComponent(cargarDatosBot))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel7))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(duracionF)
+                            .addComponent(pacienteF)
+                            .addComponent(medicoF)
+                            .addComponent(citaCombo, 0, 260, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jScrollPane3)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 563, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel3))
+                        .addGap(35, 35, 35)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(filtrarPorBot)
+                                .addGap(27, 27, 27)))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(134, 134, 134)
-                .addComponent(jLabel1)
-                .addContainerGap(150, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(recargaTabla))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(cargarDatosBot)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(agregarBot)
+                            .addComponent(agregarCB))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(editarBot)
+                            .addComponent(editarCB))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(eliminarBot)
+                            .addComponent(eliminarCB)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(21, 21, 21)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel4)
+                                    .addComponent(duracionF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel5)
+                                    .addComponent(pacienteF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel6)
+                                    .addComponent(medicoF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(citaCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel7))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addComponent(filtrarPorBot)
+                .addGap(0, 418, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void agregarBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarBotActionPerformed
+        try {
+            // Validar campos obligatorios
+            if (citaCombo.getSelectedItem() == null || diagnosticoArea.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Debe seleccionar una cita y especificar un diagnóstico",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Obtener la cita seleccionada
+            CitaMedica citaSeleccionada = (CitaMedica) citaCombo.getSelectedItem();
+
+            // Crear nuevo tratamiento
+            Tratamiento nuevoTratamiento = new Tratamiento();
+            nuevoTratamiento.setIdCita(citaSeleccionada);
+            nuevoTratamiento.setIdPaciente(citaSeleccionada.getIdPaciente());
+            nuevoTratamiento.setIdMedico(citaSeleccionada.getIdMedico());
+            nuevoTratamiento.setDiagnostico(diagnosticoArea.getText());
+            nuevoTratamiento.setIndicaciones(indicacionesArea.getText());
+            nuevoTratamiento.setDuracion(duracionF.getText());
+
+            // Guardar en la base de datos
+            cTratamiento.create(nuevoTratamiento);
+
+            // Actualizar interfaz
+            JOptionPane.showMessageDialog(this, "Tratamiento agregado exitosamente",
+                    "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            limpiarFormulario();
+            tratamientos = cTratamiento.findTratamientoEntities();
+            tratamientos.sort(Comparator.comparing(Tratamiento::getIdTratamiento));
+            modelo.actualizar(tratamientos);
+            cargarComboBox();
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al agregar tratamiento: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_agregarBotActionPerformed
+
+    private void editarBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarBotActionPerformed
+        try {
+            // Verificar que hay un tratamiento seleccionado
+            if (tratamiento == null || tratamiento.getIdTratamiento() == null) {
+                JOptionPane.showMessageDialog(this, "Debe seleccionar un tratamiento para editar",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Validar campos obligatorios
+            if (diagnosticoArea.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "El diagnóstico es obligatorio",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Actualizar datos del tratamiento
+            tratamiento.setDiagnostico(diagnosticoArea.getText());
+            tratamiento.setIndicaciones(indicacionesArea.getText());
+            tratamiento.setDuracion(duracionF.getText());
+
+            // Actualizar en la base de datos
+            cTratamiento.edit(tratamiento);
+
+            // Actualizar interfaz
+            JOptionPane.showMessageDialog(this, "Tratamiento actualizado exitosamente",
+                    "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            tratamientos = cTratamiento.findTratamientoEntities();
+            tratamientos.sort(Comparator.comparing(Tratamiento::getIdTratamiento));
+            modelo.actualizar(tratamientos);
+            cargarComboBox();
+            limpiarFormulario();
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al editar tratamiento: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_editarBotActionPerformed
+
+    private void eliminarBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarBotActionPerformed
+        try {
+            // Verificar que hay un tratamiento seleccionado
+            if (tratamiento == null || tratamiento.getIdTratamiento() == null) {
+                JOptionPane.showMessageDialog(this, "Debe seleccionar un tratamiento para eliminar",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Confirmar eliminación
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "¿Está seguro que desea eliminar este tratamiento?",
+                    "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                // Eliminar de la base de datos
+                cTratamiento.destroy(tratamiento.getIdTratamiento());
+
+                // Actualizar interfaz
+                JOptionPane.showMessageDialog(this, "Tratamiento eliminado exitosamente",
+                        "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                limpiarFormulario();
+                tratamientos = cTratamiento.findTratamientoEntities();
+                tratamientos.sort(Comparator.comparing(Tratamiento::getIdTratamiento));
+                modelo.actualizar(tratamientos);
+                cargarComboBox();
+                limpiarFormulario();
+            }
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al eliminar tratamiento: " + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_eliminarBotActionPerformed
+
+    private void cargarDatosBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarDatosBotActionPerformed
+        int idTrata = (int) tablaTratamientos.getValueAt(tablaTratamientos.getSelectedRow(), 0);
+        tratamiento = cTratamiento.findTratamiento(idTrata);
+        userSelect();
+    }//GEN-LAST:event_cargarDatosBotActionPerformed
+
+    private void filtrarPorBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtrarPorBotActionPerformed
+        // Obtener el médico seleccionado en la tabla
+        limpiarFormulario();
+        int filaSeleccionada = tablaMedicos.getSelectedRow();
+        if (filaSeleccionada != -1) {
+            int idMedico = (int) tablaMedicos.getValueAt(filaSeleccionada, 0);
+            medico = cMedico.findMedico(idMedico);
+
+            // Actualizar el campo médico en el formulario
+            medicoF.setText(medico.toString());
+
+            // Filtrar las citas y tratamientos por este médico
+            filtrarCitasYTratamientosPorMedico(idMedico);
+        }
+        recargaTabla.setEnabled(true);
+        cargarDatosBot.setEnabled(false);
+        agregarBot.setEnabled(false);
+        editarBot.setEnabled(false);
+        eliminarBot.setEnabled(false);
+    }//GEN-LAST:event_filtrarPorBotActionPerformed
+
+    private void tablaTratamientosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaTratamientosMouseClicked
+        cargarDatosBot.setEnabled(true);
+        filtrarPorBot.setEnabled(false);
+        agregarBot.setEnabled(false);
+    }//GEN-LAST:event_tablaTratamientosMouseClicked
+
+    private void tablaMedicosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaMedicosMouseClicked
+        filtrarPorBot.setEnabled(true);
+        cargarDatosBot.setEnabled(false);
+        agregarBot.setEnabled(false);
+    }//GEN-LAST:event_tablaMedicosMouseClicked
+
+    private void recargaTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recargaTablaActionPerformed
+        limpiarFormulario();
+        tratamientos = cTratamiento.findTratamientoEntities();
+        modelo.actualizar(tratamientos);
+        cargarComboBox();
+        recargaTabla.setEnabled(false);
+        cargarDatosBot.setEnabled(false);
+        agregarBot.setEnabled(false);
+        editarBot.setEnabled(false);
+        eliminarBot.setEnabled(false);
+        filtrarPorBot.setEnabled(false);
+    }//GEN-LAST:event_recargaTablaActionPerformed
+
+    private void eliminarCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarCBActionPerformed
+        if (eliminarCB.isSelected()) {
+            eliminarBot.setEnabled(true);
+            agregarBot.setEnabled(false);
+            editarBot.setEnabled(false);
+            cargarDatosBot.setEnabled(false);
+        } else {
+            eliminarBot.setEnabled(false);
+        }
+    }//GEN-LAST:event_eliminarCBActionPerformed
+
+    private void editarCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarCBActionPerformed
+        if (editarCB.isSelected()) {
+            editarBot.setEnabled(true);
+            agregarBot.setEnabled(false);
+            eliminarBot.setEnabled(false);
+            cargarDatosBot.setEnabled(false);
+        } else {
+            editarBot.setEnabled(false);
+        }
+    }//GEN-LAST:event_editarCBActionPerformed
+
+    private void agregarCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarCBActionPerformed
+        if (agregarCB.isSelected()) {
+            limpiarFormulario();
+            agregarBot.setEnabled(true);
+            editarBot.setEnabled(false);
+            eliminarBot.setEnabled(false);
+            cargarDatosBot.setEnabled(false);
+        } else {
+            agregarBot.setEnabled(false);
+        }
+    }//GEN-LAST:event_agregarCBActionPerformed
+
+    private void citaComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_citaComboActionPerformed
+        CitaMedica citaSeleccionada = (CitaMedica) citaCombo.getSelectedItem();
+
+        if (citaSeleccionada != null) {
+            // Actualizar campo del paciente
+            if (citaSeleccionada.getIdPaciente() != null) {
+                pacienteF.setText(
+                        citaSeleccionada.getIdPaciente().getNombre() + " "
+                        + citaSeleccionada.getIdPaciente().getApellidoPaterno()
+                );
+            } else {
+                pacienteF.setText(""); // Limpiar si no hay paciente
+            }
+
+            // Actualizar campo del médico
+            if (citaSeleccionada.getIdMedico() != null) {
+                medicoF.setText(
+                        citaSeleccionada.getIdMedico().getNombre() + " "
+                        + citaSeleccionada.getIdMedico().getApellidoPaterno()
+                );
+            } else {
+                medicoF.setText(""); // Limpiar si no hay médico
+            }
+        } else {
+            // Si no hay cita seleccionada, limpiar campos
+            pacienteF.setText("");
+            medicoF.setText("");
+        }
+    }//GEN-LAST:event_citaComboActionPerformed
+
+    public void userSelect() {
+        cTratamiento = new TratamientoJpaController(admDatos.getEmf());
+        tratamientos = cTratamiento.findTratamientoEntities();
+        Tratamiento trat = new Tratamiento();
+
+        int filaSeleccionada = tablaTratamientos.getSelectedRow();
+        if (filaSeleccionada != -1) {
+            int idTrata = (int) tablaTratamientos.getValueAt(filaSeleccionada, 0);
+            tratamiento = cTratamiento.findTratamiento(idTrata);
+            diagnosticoArea.setText(tratamiento.getDiagnostico());
+            indicacionesArea.setText(tratamiento.getIndicaciones());
+            duracionF.setText(tratamiento.getDuracion());
+
+            // Mostrar nombres completos en lugar de toString()
+            if (tratamiento.getIdPaciente() != null) {
+                pacienteF.setText(tratamiento.getIdPaciente().getNombre() + " "
+                        + tratamiento.getIdPaciente().getApellidoPaterno());
+            } else {
+                pacienteF.setText("");
+            }
+
+            if (tratamiento.getIdMedico() != null) {
+                medicoF.setText(tratamiento.getIdMedico().getNombre() + " "
+                        + tratamiento.getIdMedico().getApellidoPaterno());
+            } else {
+                medicoF.setText("");
+            }
+
+            citaCombo.setSelectedItem(tratamiento.getIdCita());
+        }
+    }
+
+    private void filtrarCitasYTratamientosPorMedico(int idMedico) {
+        // 1. Filtrar citas en el ComboBox
+        filtrarCitasEnComboBox(idMedico);
+
+        // 2. Filtrar tratamientos en la tabla general
+        filtrarTratamientosEnTabla(idMedico);
+    }
+
+    private void filtrarCitasEnComboBox(int idMedico) {
+        citaCombo.removeAllItems();
+        List<CitaMedica> citas = new CitaMedicaJpaController(admDatos.getEmf()).findCitaMedicaEntities();
+
+        boolean encontradas = false;
+        for (CitaMedica cita : citas) {
+            if (cita.getIdMedico() != null && cita.getIdMedico().getIdMedico() == idMedico) {
+                citaCombo.addItem(cita);
+                encontradas = true;
+            }
+        }
+
+        if (!encontradas) {
+            citaCombo.setSelectedIndex(-1);
+        }
+    }
+
+    private void filtrarTratamientosEnTabla(int idMedico) {
+        // Obtener todos los tratamientos
+        List<Tratamiento> todosTratamientos = cTratamiento.findTratamientoEntities();
+        List<Tratamiento> tratamientosFiltrados = new ArrayList<>();
+
+        // Filtrar tratamientos por médico
+        for (Tratamiento tratamiento : todosTratamientos) {
+            if (tratamiento.getIdMedico() != null && tratamiento.getIdMedico().getIdMedico() == idMedico) {
+                tratamientosFiltrados.add(tratamiento);
+            }
+        }
+
+        // Actualizar el modelo de la tabla con los tratamientos filtrados
+        modelo = new ModTabTratamientos(tratamientosFiltrados);
+        tablaTratamientos.setModel(modelo);
+    }
+
+    // Método para restablecer los filtros (puedes asociarlo a un botón "Mostrar todos")
+    private void mostrarTodosTratamientos() {
+        tratamientos = cTratamiento.findTratamientoEntities();
+        modelo = new ModTabTratamientos(tratamientos);
+        tablaTratamientos.setModel(modelo);
+
+        // También puedes restablecer el ComboBox de citas si lo deseas
+        cargarComboBox();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup acciones;
+    private javax.swing.JButton agregarBot;
+    private javax.swing.JCheckBox agregarCB;
+    private javax.swing.JButton cargarDatosBot;
+    private javax.swing.JComboBox<CitaMedica> citaCombo;
+    private javax.swing.JTextArea diagnosticoArea;
+    private javax.swing.JTextField duracionF;
+    private javax.swing.JButton editarBot;
+    private javax.swing.JCheckBox editarCB;
+    private javax.swing.JButton eliminarBot;
+    private javax.swing.JCheckBox eliminarCB;
+    private javax.swing.JButton filtrarPorBot;
+    private javax.swing.JTextArea indicacionesArea;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JTextField medicoF;
+    private javax.swing.JTextField pacienteF;
+    private javax.swing.JButton recargaTabla;
+    private javax.swing.JTable tablaMedicos;
+    private javax.swing.JTable tablaTratamientos;
     // End of variables declaration//GEN-END:variables
 }

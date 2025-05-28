@@ -3,11 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/carlo/Documents/Proyecto%20Limonada/EstarBien-App/src/control/PagoJpaController.java</file>
-            <file>file:/C:/Users/carlo/Documents/Proyecto%20Limonada/EstarBien-App/src/vista/PanelMedicamentos.java</file>
-            <file>file:/C:/Users/carlo/Documents/Proyecto%20Limonada/EstarBien-App/src/vista/Pagos/PanelPagos.java</file>
-            <file>file:/C:/Users/carlo/Documents/Proyecto%20Limonada/EstarBien-App/src/vista/MainView.java</file>
-            <file>file:/C:/Users/carlo/Documents/Proyecto%20Limonada/EstarBien-App/src/modelo/Pago.java</file>
+            <file>file:/C:/Users/B550/Documents/Proyecto%20Limonada/EstarBien-App/EstarBien-App/src/META-INF/persistence.xml</file>
+            <file>file:/C:/Users/B550/Documents/Proyecto%20Limonada/EstarBien-App/EstarBien-App/src/vista/PanelFacturas.java</file>
+            <file>file:/C:/Users/B550/Documents/Proyecto%20Limonada/EstarBien-App/EstarBien-App/src/vista/PanelPagos.java</file>
+            <file>file:/C:/Users/B550/Documents/Proyecto%20Limonada/EstarBien-App/EstarBien-App/src/modelo/Pago.java</file>
+            <file>file:/C:/Users/B550/Documents/Proyecto%20Limonada/EstarBien-App/EstarBien-App/src/modelo/ModListPacientesPago.java</file>
+            <file>file:/C:/Users/B550/Documents/Proyecto%20Limonada/EstarBien-App/EstarBien-App/src/modelo/ModListPagos.java</file>
+            <file>file:/C:/Users/B550/Documents/Proyecto%20Limonada/EstarBien-App/EstarBien-App/src/modelo/ModListCitaPago.java</file>
+            <file>file:/C:/Users/B550/Documents/Proyecto%20Limonada/EstarBien-App/EstarBien-App/src/control/PagoJpaController.java</file>
         </group>
     </open-files>
 </project-private>

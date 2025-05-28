@@ -4,6 +4,7 @@
  */
 package vista;
 
+import control.AdmDatos;
 import control.MedicamentoJpaController;
 import java.awt.Dimension;
 import javax.swing.Timer;
@@ -11,98 +12,72 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import modelo.Medicamento;
+import modelo.ModTabMedicamentos;
 
 /**
  *
  * @author carlo
  */
 public class PanelMedicamentos extends javax.swing.JPanel {
+    //Variables modificables
+    //Variables de control de datos
+    private AdmDatos admDatos = new AdmDatos();
+    private MedicamentoJpaController medicamentoController;
+    private List<Medicamento> medicamento;
+    private ModTabMedicamentos modelo;
+    //Variables usadas para modificar medicamentos
+    private boolean modoEdicion = false;
+    private Medicamento medicamentoSeleccionado;
+    //Variables usadas para el panel deslizante
+    private Timer timerDeslizamiento;
+    private boolean desplegado = false;
+    private int anchoObjetivo = 490; // Ancho deseado del formulario
+    private int velocidadDeslizamiento = 20; // Aumentado para animación más fluida
+    private int anchoActual = 0; // Nuevo campo para rastrear el ancho actual
+    private DefaultTableModel modeloTabla; //Inicializamos el modelo de la tabla para cargarla
 
-    /**
-     * Creates new form PanelMedicamentos
-     */
     public PanelMedicamentos() {
         initComponents();
-        //inicializarTabla(); // Inicializar el modelo de la tabla
-        //cargarTablaMedicamentos();
-        //Inicializa el ancho del formulario en 0
-        panelFormularioDeslizante.setPreferredSize(new Dimension(0, panelFormularioDeslizante.getHeight()));
-        panelFormularioDeslizante.setMinimumSize(new Dimension(0, panelFormularioDeslizante.getHeight()));
-        panelFormularioDeslizante.setMaximumSize(new Dimension(0, panelFormularioDeslizante.getHeight()));
-        panelFormularioDeslizante.revalidate();
-        panelFormularioDeslizante.repaint();
+        botonModificar.setEnabled(false);
+        medicamentoController = new MedicamentoJpaController(admDatos.getEmf());
+        cargarTablaMedicamentos();
+        configurarPanelDeslizante();
         configurarListeners();
-
-    }
-    
-    
-
-    //Inicio de sección de métodos para inicializar la tabla de medicamentos
-    /*private void inicializarTabla() {
-        DefaultTableModel nuevoModelo = new DefaultTableModel(
-            new Object[][]{},
-            new String[]{"ID", "Nombre", "Descripción", "Presentación", "Dosis"}
-        ) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        modeloTabla = nuevoModelo;
-        tablaMedicamentos.setModel(modeloTabla);
-        
+        buscador.setJTable(tablaMedicamentos);
     }
     
     private void cargarTablaMedicamentos() {
-        List<Medicamento> medicamentos = medicamentoController.findMedicamentoEntities();
-        modeloTabla.setRowCount(0); // Limpiar la tabla antes de cargar datos
-        for (Medicamento m : medicamentos) {
-            Object[] fila = {
-                m.getIdMedicamento(),
-                m.getNombre(),
-                m.getDescripcion(),
-                m.getPresentacion(),
-                m.getDosisRecomendada()
-            };
-            modeloTabla.addRow(fila);
-        }
-        if (modeloTabla.getColumnCount() == 5) {
-    modeloTabla.setRowCount(0);
-    for (Medicamento m : medicamentos) {
-        modeloTabla.addRow(new Object[]{
-            m.getIdMedicamento(),
-            m.getNombre(),
-            m.getDescripcion(),
-            m.getPresentacion(),
-            m.getDosisRecomendada()
-                
-        });
-        System.out.println("Se tienen "+modeloTabla.getColumnCount());
+        medicamento = medicamentoController.findMedicamentoEntities();
+        medicamento.sort(Comparator.comparing(Medicamento::getIdMedicamento));
+        modelo = new ModTabMedicamentos(medicamento);
+        tablaMedicamentos.setModel(modelo);
+        actualizarTabla();
     }
-} else {
-    System.err.println("Modelo de tabla no tiene 5 columnas. No se puede cargar.");
+    
+    private void actualizarTabla() {
+        modelo.fireTableDataChanged(); // Notificar cambios al modelo
+        tablaMedicamentos.repaint();
+        tablaMedicamentos.revalidate();
     }
-    }
-    */
+    
     //Métodos para que el panel del formulario se deslice
+    private void configurarPanelDeslizante() {
+        Dimension preferredSize = new Dimension(0, panelFormularioDeslizante.getHeight());
+        panelFormularioDeslizante.setPreferredSize(preferredSize);
+        panelFormularioDeslizante.setMinimumSize(preferredSize);
+        panelFormularioDeslizante.setMaximumSize(preferredSize);
+        panelFormularioDeslizante.revalidate();
+        panelFormularioDeslizante.repaint();
+    }
+    //Listeners y configuración de ellos
     private void configurarListeners() {
-        botonAgregar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                desplegarFormulario();
-            }
-        });
-
-        botonAgregar1.addActionListener(new ActionListener() { // Modificar
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                desplegarFormulario(); // Misma lógica para modificar por ahora
-            }
-        });
 
         timerDeslizamiento = new Timer(15, new ActionListener() {
             @Override
@@ -115,24 +90,125 @@ public class PanelMedicamentos extends javax.swing.JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 retraerFormulario();
+                limpiarCampos();
             }
         });
         
-        // También añadir funcionalidad al botón guardar
-        botonGuardar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Aquí iría la lógica para guardar el medicamento
-                // Por ahora, solo cerramos el formulario
-                retraerFormulario();
+        tablaMedicamentos.getSelectionModel().addListSelectionListener(e -> {
+            boolean filaSeleccionada = tablaMedicamentos.getSelectedRow() != -1;
+            botonModificar.setEnabled(filaSeleccionada);
+        });  
+        
+        // Botón Agregar
+        botonAgregar.addActionListener(e -> {
+            modoEdicion = false; // Asegurar modo creación
+            desplegarFormulario();
+        });
+
+        // Botón Modificar (solo 1 listener)
+        botonModificar.addActionListener(e -> {
+            int filaSeleccionada = tablaMedicamentos.getSelectedRow();
+            if (filaSeleccionada == -1) {
+                JOptionPane.showMessageDialog(null, "Seleccione un medicamento", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            try {
+                // Obtener ID de la columna correcta (ej. columna 0)
+                int id = (int) tablaMedicamentos.getValueAt(filaSeleccionada, 0);
+                medicamentoSeleccionado = medicamentoController.findMedicamento(id);
+
+                if (medicamentoSeleccionado == null) {
+                    JOptionPane.showMessageDialog(null, "Error: Medicamento no existe", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                // Cargar datos en los campos
+                nombreField.setText(medicamentoSeleccionado.getNombre());
+                jTextArea1.setText(medicamentoSeleccionado.getDescripcion() != null ? medicamentoSeleccionado.getDescripcion() : "");
+                presentacionField.setText(medicamentoSeleccionado.getPresentacion() != null ? medicamentoSeleccionado.getPresentacion() : "");
+                dosisField.setText(medicamentoSeleccionado.getDosisRecomendada() != null ? medicamentoSeleccionado.getDosisRecomendada() : "");
+                jTextArea2.setText(medicamentoSeleccionado.getContraindicaciones() != null ? medicamentoSeleccionado.getContraindicaciones() : "");
+
+                modoEdicion = true;
+                desplegarFormulario(); // Expandir el panel
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Error al cargar datos: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
+    
+    botonGuardar.addActionListener(e -> {
+        try {
+            if (modoEdicion && medicamentoSeleccionado != null) { 
+                // Actualizar medicamento existente
+                actualizarMedicamentoDesdeFormulario();
+                medicamentoController.edit(medicamentoSeleccionado);
+                JOptionPane.showMessageDialog(null, "¡Medicamento actualizado!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            } else { 
+                // Crear nuevo medicamento
+                Medicamento nuevoMedicamento = crearMedicamentoDesdeFormulario();
+                medicamentoController.create(nuevoMedicamento);
+                JOptionPane.showMessageDialog(null, "¡Medicamento creado!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            }
+
+            actualizarTablaYFormulario();
+
+        } catch (Exception ex) {
+            manejarError(ex);
+        }
+    });
+    
+    }
+    //Métodos auxiliares
+    
+    private void actualizarMedicamentoDesdeFormulario() {
+        medicamentoSeleccionado.setNombre(nombreField.getText().trim());
+        medicamentoSeleccionado.setDescripcion(jTextArea1.getText().trim());
+        medicamentoSeleccionado.setPresentacion(presentacionField.getText().trim());
+        medicamentoSeleccionado.setDosisRecomendada(dosisField.getText().trim());
+        medicamentoSeleccionado.setContraindicaciones(jTextArea2.getText().trim());
+        medicamentoSeleccionado.setUpdatedAt(new Date());
     }
 
+    private Medicamento crearMedicamentoDesdeFormulario() {
+        Medicamento nuevo = new Medicamento();
+        nuevo.setNombre(nombreField.getText().trim());
+        nuevo.setDescripcion(jTextArea1.getText().trim());
+        nuevo.setPresentacion(presentacionField.getText().trim());
+        nuevo.setDosisRecomendada(dosisField.getText().trim());
+        nuevo.setContraindicaciones(jTextArea2.getText().trim());
+        nuevo.setCreatedAt(new Date());
+        nuevo.setUpdatedAt(new Date());
+        return nuevo;
+    }
+
+    private void actualizarTablaYFormulario() {
+        cargarTablaMedicamentos();
+        retraerFormulario();
+        limpiarCampos();
+        modoEdicion = false;
+        medicamentoSeleccionado = null;
+    }
+
+    private void manejarError(Exception ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(null, 
+            "Error: " + ex.getMessage(), 
+            "Error", 
+            JOptionPane.ERROR_MESSAGE
+        );
+    }
+    
     private void desplegarFormulario() {
-        limpiarCampos(); // Opcionalmente limpiar los campos si es para agregar nuevo
+        
         desplegado = true;
         timerDeslizamiento.start();
+        panelFormularioDeslizante.setVisible(true); 
+        panelFormularioDeslizante.revalidate();
+        panelFormularioDeslizante.repaint();
+
     }
 
     private void retraerFormulario() {
@@ -141,10 +217,10 @@ public class PanelMedicamentos extends javax.swing.JPanel {
     }
 
     private void limpiarCampos() {
+        medicamentoSeleccionado = null;
         nombreField.setText("");
         jTextArea1.setText("");
         presentacionField.setText("");
-        gramajeField.setText("");
         dosisField.setText("");
         jTextArea2.setText("");
     }
@@ -192,8 +268,6 @@ public class PanelMedicamentos extends javax.swing.JPanel {
         jTextArea1 = new javax.swing.JTextArea();
         presentacionLabel = new javax.swing.JLabel();
         presentacionField = new javax.swing.JTextField();
-        gramajeLabel = new javax.swing.JLabel();
-        gramajeField = new javax.swing.JTextField();
         dosisLabel = new javax.swing.JLabel();
         dosisField = new javax.swing.JTextField();
         dosisLabel2 = new javax.swing.JLabel();
@@ -204,12 +278,14 @@ public class PanelMedicamentos extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         descripcionLabel1 = new javax.swing.JLabel();
         dosis = new javax.swing.JLabel();
+        descripcionLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaMedicamentos = new javax.swing.JTable();
         buscador = new miscomponentes.JBuscador();
         botonAgregar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        botonAgregar1 = new javax.swing.JButton();
+        botonModificar = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -228,9 +304,6 @@ public class PanelMedicamentos extends javax.swing.JPanel {
 
         presentacionLabel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         presentacionLabel.setText("Presentación:");
-
-        gramajeLabel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        gramajeLabel.setText("Gramaje:");
 
         dosisLabel.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         dosisLabel.setText("Dosis recomendada:");
@@ -263,6 +336,9 @@ public class PanelMedicamentos extends javax.swing.JPanel {
         dosis.setFont(new java.awt.Font("Dialog", 2, 10)); // NOI18N
         dosis.setText("ej: 2 tabletas cada 8 horas, especificar la dosis usual");
 
+        descripcionLabel2.setFont(new java.awt.Font("Dialog", 2, 10)); // NOI18N
+        descripcionLabel2.setText("La presentación que trae y el gramaje, Ej: Tabletas 150mg");
+
         javax.swing.GroupLayout panelFormularioDeslizanteLayout = new javax.swing.GroupLayout(panelFormularioDeslizante);
         panelFormularioDeslizante.setLayout(panelFormularioDeslizanteLayout);
         panelFormularioDeslizanteLayout.setHorizontalGroup(
@@ -271,15 +347,6 @@ public class PanelMedicamentos extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(128, 128, 128))
-            .addGroup(panelFormularioDeslizanteLayout.createSequentialGroup()
-                .addComponent(presentacionLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(presentacionField, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(gramajeLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(gramajeField, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
             .addGroup(panelFormularioDeslizanteLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelFormularioDeslizanteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -315,6 +382,15 @@ public class PanelMedicamentos extends javax.swing.JPanel {
                                 .addComponent(dosis)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(panelFormularioDeslizanteLayout.createSequentialGroup()
+                .addComponent(presentacionLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelFormularioDeslizanteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelFormularioDeslizanteLayout.createSequentialGroup()
+                        .addComponent(descripcionLabel2)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(presentacionField))
+                .addContainerGap())
         );
         panelFormularioDeslizanteLayout.setVerticalGroup(
             panelFormularioDeslizanteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -334,16 +410,16 @@ public class PanelMedicamentos extends javax.swing.JPanel {
                 .addGap(32, 32, 32)
                 .addGroup(panelFormularioDeslizanteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(presentacionField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(presentacionLabel)
-                    .addComponent(gramajeLabel)
-                    .addComponent(gramajeField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(58, 58, 58)
+                    .addComponent(presentacionLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(descripcionLabel2)
+                .addGap(38, 38, 38)
                 .addGroup(panelFormularioDeslizanteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(dosisField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(dosisLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(dosis)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addGroup(panelFormularioDeslizanteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFormularioDeslizanteLayout.createSequentialGroup()
                         .addComponent(dosisLabel2)
@@ -358,12 +434,13 @@ public class PanelMedicamentos extends javax.swing.JPanel {
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridx = 7;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 4;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.ipadx = -14;
         gridBagConstraints.ipady = 27;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 18, 0, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 6, 0, 0);
         add(panelFormularioDeslizante, gridBagConstraints);
 
         tablaMedicamentos.setModel(new javax.swing.table.DefaultTableModel(
@@ -379,10 +456,10 @@ public class PanelMedicamentos extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.gridwidth = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 567;
-        gridBagConstraints.ipady = 412;
+        gridBagConstraints.ipadx = 729;
+        gridBagConstraints.ipady = 468;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -417,7 +494,7 @@ public class PanelMedicamentos extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(6, 188, 0, 0);
         add(jLabel2, gridBagConstraints);
 
-        botonAgregar1.setText("Modificar Medicamento");
+        botonModificar.setText("Modificar Medicamento");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -425,28 +502,49 @@ public class PanelMedicamentos extends javax.swing.JPanel {
         gridBagConstraints.ipady = 13;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(12, 6, 0, 0);
-        add(botonAgregar1, gridBagConstraints);
+        add(botonModificar, gridBagConstraints);
+
+        jButton1.setBackground(new java.awt.Color(153, 0, 0));
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("Eliminar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 5;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.ipadx = 51;
+        gridBagConstraints.ipady = 13;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(12, 18, 0, 0);
+        add(jButton1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void botonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCancelarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_botonCancelarActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonAgregar;
-    private javax.swing.JButton botonAgregar1;
     private javax.swing.JButton botonCancelar;
     private javax.swing.JButton botonGuardar;
+    private javax.swing.JButton botonModificar;
     private miscomponentes.JBuscador buscador;
     private javax.swing.JLabel descripcionLabel;
     private javax.swing.JLabel descripcionLabel1;
+    private javax.swing.JLabel descripcionLabel2;
     private javax.swing.JLabel dosis;
     private javax.swing.JTextField dosisField;
     private javax.swing.JLabel dosisLabel;
     private javax.swing.JLabel dosisLabel2;
-    private javax.swing.JTextField gramajeField;
-    private javax.swing.JLabel gramajeLabel;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -461,13 +559,6 @@ public class PanelMedicamentos extends javax.swing.JPanel {
     private javax.swing.JLabel presentacionLabel;
     private javax.swing.JTable tablaMedicamentos;
     // End of variables declaration//GEN-END:variables
-    //Variables modificables
-    private Timer timerDeslizamiento;
-    private boolean desplegado = false;
-    private int anchoObjetivo = 490; // Ancho deseado del formulario
-    private int velocidadDeslizamiento = 20; // Aumentado para animación más fluida
-    private int anchoActual = 0; // Nuevo campo para rastrear el ancho actual
-    private MedicamentoJpaController medicamentoController = new MedicamentoJpaController(); //Inicializamos el controlador
-    private DefaultTableModel modeloTabla; //Inicializamos el modelo de la tabla para cargarla
+    
 
 }

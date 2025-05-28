@@ -245,7 +245,7 @@ public class CitaMedica implements Serializable {
 
     @Override
     public String toString() {
-        return "modelo.CitaMedica[ idCita=" + idCita + " ]";
+        return "Cita #" + this.getIdCita(); // Ejemplo: "Cita #41"
     }
     
 }
