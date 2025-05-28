@@ -14,6 +14,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 import modelo.CitaMedica;
@@ -85,26 +86,32 @@ public class PanelConsultas extends javax.swing.JPanel {
         comboCita.removeAllItems();
         citasHash.clear();
 
-        // Obtener todas las citas y consultas
+        // Obtener datos frescos de la base de datos
         citas = cCita.findCitaMedicaEntities();
         consultas = cConsulta.findConsultaEntities();
 
-        // Crear lista de IDs de citas que ya tienen consulta
-        List<Integer> citasConConsulta = consultas.stream()
+        // Crear conjunto de IDs de citas con consulta (más eficiente que List)
+        Set<Integer> citasConConsulta = consultas.stream()
                 .map(consulta -> consulta.getIdCita().getIdCita())
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
-        // Filtrar citas que no están en la lista de citas con consulta
+        // Filtrar y cargar citas sin consulta
         citas.stream()
                 .filter(cita -> !citasConConsulta.contains(cita.getIdCita()))
                 .forEach(cita -> {
                     String key = "Cita " + cita.getIdCita() + " > "
-                            + cita.getIdPaciente().getNombre() + " "
-                            + cita.getIdPaciente().getApellidoPaterno() + " "
-                            + cita.getIdPaciente().getApellidoMaterno();
+                            + cita.getIdPaciente().getNombre() + " " + cita.getIdPaciente().getApellidoPaterno() + " " + cita.getIdPaciente().getApellidoMaterno();
                     comboCita.addItem(key);
                     citasHash.put(key, cita);
                 });
+
+        // Verificar que no estamos agregando citas duplicadas
+        if (comboCita.getItemCount() == 0) {
+            JOptionPane.showMessageDialog(this,
+                    "No hay citas disponibles sin consulta",
+                    "Información",
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     /**
@@ -655,6 +662,19 @@ public class PanelConsultas extends javax.swing.JPanel {
     }//GEN-LAST:event_cargarBotActionPerformed
 
     private void agregarBotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarBotActionPerformed
+
+        // Validación adicional para cita ya con consulta
+        CitaMedica citaSeleccionada = citasHash.get((String) comboCita.getSelectedItem());
+        if (citaSeleccionada != null) {
+            Consulta consultaExistente = cConsulta.findConsulta(citaSeleccionada.getIdCita());
+            if (consultaExistente != null) {
+                JOptionPane.showMessageDialog(this,
+                        "Esta cita ya tiene una consulta asociada",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
         String sintomas = sintomasArea.getText().trim();
         String presion = presionArt.getText().trim();
         String temperaturaStr = tempField.getText().trim();
@@ -696,13 +716,20 @@ public class PanelConsultas extends javax.swing.JPanel {
             cConsulta.create(nueva);
 
             // Insertar diagnóstico si hay
-            if (!diagnosticoArea.getText().trim().isEmpty()) {
+            if (validarDiagnostico()) {
                 ConsultaDiagnostico diag = new ConsultaDiagnostico();
                 diag.setIdConsulta(nueva);
                 diag.setCodigoCie(codigoCIEField.getText().trim());
                 diag.setDiagnostico(diagnosticoArea.getText().trim());
                 diag.setTipo(tipoDiagField.getText().trim());
+                diag.setCreatedAt(new Date()); // Asegurar fecha de creación
+
                 cConsultaDiag.create(diag);
+            } else if (!diagnosticoArea.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Para guardar un diagnóstico, complete todos los campos (CIE, Diagnóstico y Tipo)",
+                        "Advertencia",
+                        JOptionPane.WARNING_MESSAGE);
             }
 
             JOptionPane.showMessageDialog(this, "Consulta agregada correctamente.");
@@ -890,6 +917,11 @@ public class PanelConsultas extends javax.swing.JPanel {
         alturaSpinner.setValue(0.3);
     }
 
+    private boolean validarDiagnostico() {
+        return !codigoCIEField.getText().trim().isEmpty()
+                && !diagnosticoArea.getText().trim().isEmpty()
+                && !tipoDiagField.getText().trim().isEmpty();
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton agregarBot;
     private javax.swing.JSpinner alturaSpinner;
