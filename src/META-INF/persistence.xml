@@ -27,7 +27,7 @@
       <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/estar_bien_db"/>
       <property name="javax.persistence.jdbc.user" value="postgres"/>
       <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-      <property name="javax.persistence.jdbc.password" value="admin"/>
+      <property name="javax.persistence.jdbc.password" value="Dav2406*"/>
       <!-- Configuración de logging para EclipseLink -->
       <property name="eclipselink.logging.level" value="FINE"/>
       <property name="eclipselink.logging.timestamp" value="true"/>
