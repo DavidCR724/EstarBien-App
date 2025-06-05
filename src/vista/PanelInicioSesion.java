@@ -180,6 +180,8 @@ public class PanelInicioSesion extends javax.swing.JPanel {
     } else {
         JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
     }
+    usuarioField.setText("");
+    contrasenaField.setText("");
     }//GEN-LAST:event_btnLoginActionPerformed
 
     private void usuarioFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usuarioFieldActionPerformed

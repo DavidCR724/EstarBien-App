@@ -15,6 +15,7 @@ import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.io.InputStream;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -43,6 +44,7 @@ public class MainView extends javax.swing.JFrame {
 
             // Establecer la fuente como fuente predeterminada
             UIManager.put("defaultFont", manrope);
+            setIconImage(new ImageIcon(getClass().getResource("/imagen/iconoApp.png")).getImage());
 
             // Configuración del tema FlatLaf
             FlatLaf.registerCustomDefaultsSource("mytheme"); // Si tienes un archivo .properties
