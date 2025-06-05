@@ -35,7 +35,7 @@ public class ModListPagos extends DefaultListModel<String> {
     @Override
     public String getElementAt(int index) {
         Pago c = pagos.get(index);
-        return "Folio: #" + c.getIdPago() + "   Cita: #" + c.getIdCita(); // Formato consistente
+        return "Folio: #" + c.getIdPago() + "   " + c.getIdCita(); // Formato consistente
     }
     
     public void actualizar(List<Pago> nuevosPagos) {
